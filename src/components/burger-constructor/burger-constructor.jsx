@@ -4,18 +4,13 @@ import {
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from 'prop-types';
 import { ingredients } from "../../utils/data";
 import styles from "./burger-constructor.module.css";
 
 const BurgerConstructor = () => {
   let totalPrice = 2510;
-  const modIngredients = ingredients.slice(1, ingredients.length - 1);
-  const randToppings = [];
-
-  for (let i = 0; i <= 10; i++) {
-    const randIndex = Math.floor(Math.random() * modIngredients.length);
-    randToppings.push(modIngredients[randIndex]);
-  }
+  const randToppings = ingredients.slice(1, ingredients.length + 1);
 
   totalPrice += randToppings.reduce((total, current) => {
     return total + current.price;
@@ -66,5 +61,25 @@ const BurgerConstructor = () => {
     </section>
   );
 };
+
+BurgerConstructor.propTypes = {
+  ingredients: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string,
+        type: PropTypes.string,
+        proteins: PropTypes.number,
+        fat: PropTypes.number,
+        carbohydrates: PropTypes.number,
+        calories: PropTypes.number,
+        price: PropTypes.number,
+        image: PropTypes.string,
+        image_mobile: PropTypes.string,
+        image_large: PropTypes.string,
+        __v: PropTypes.number,
+      }).isRequired,
+  ),
+};
+
 
 export default BurgerConstructor;

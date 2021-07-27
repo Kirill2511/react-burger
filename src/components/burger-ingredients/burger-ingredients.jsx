@@ -2,6 +2,7 @@ import { ingredients } from "../../utils/data";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientCard from "../ingredient-card/ingredient-card";
 import styles from "./burger-ingredients.module.css";
+import PropTypes from "prop-types";
 
 const BurgerIngredients = () => (
   <section style={{ width: 600 }} className="mr-10">
@@ -49,5 +50,24 @@ const BurgerIngredients = () => (
     </div>
   </section>
 );
+
+BurgerIngredients.propTypes = {
+    ingredients: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string,
+            name: PropTypes.string,
+            type: PropTypes.string,
+            proteins: PropTypes.number,
+            fat: PropTypes.number,
+            carbohydrates: PropTypes.number,
+            calories: PropTypes.number,
+            price: PropTypes.number,
+            image: PropTypes.string,
+            image_mobile: PropTypes.string,
+            image_large: PropTypes.string,
+            __v: PropTypes.number,
+        }).isRequired,
+    ),
+};
 
 export default BurgerIngredients;
