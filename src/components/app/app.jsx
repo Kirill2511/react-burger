@@ -5,31 +5,42 @@ import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import styles from "./app.module.css";
 import { useEffect, useState } from "react";
 
-const App = ({ ingredients }) => {
+const App = () => {
   const [state, setState] = useState({
-    ingredientData: [],
+    data: [],
     hasError: false,
   });
 
   useEffect(() => {
+    const url = 'https://norma.nomoreparties.space/api/ingredients';
     const getIngredientsData = async () => {
-      setState({ ...state, hasError: false });
-      const res = await fetch(
-        "https://norma.nomoreparties.space/api/ingredients"
-      );
-      const data = await res.json();
-      setState({ ingredientData: data.data, hasError: false });
-    };
+      try {
+        const response = await fetch(url);
+
+        if (response && response.ok) {
+          const { data } = await response.json();
+          setState({ ...state, data });
+        }
+      } catch (error) {
+        setState({ ...state, hasError: true });
+      }
+    }
 
     getIngredientsData();
-  }, [ingredients]);
+  }, [])
 
   return (
     <>
       <AppHeader />
       <main className={styles.main}>
-        <BurgerIngredients ingredients={state.ingredientData} hasError={state.hasError} />
-        <BurgerConstructor ingredients={state.ingredientData} hasError={state.hasError} />
+        <BurgerIngredients
+          ingredients={state.data}
+          hasError={state.hasError}
+        />
+        <BurgerConstructor
+          ingredients={state.data}
+          hasError={state.hasError}
+        />
       </main>
     </>
   );

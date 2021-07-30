@@ -1,9 +1,9 @@
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import styles from "./modal-overlay.module.css";
 
 const ModalOverlay = (props) => {
-  const { children, onClose } = props;
+  const { onClose } = props;
   const modalOverlayRef = useRef(document.createElement("div"));
 
   const onEscapeClose = useCallback(
@@ -35,15 +35,10 @@ const ModalOverlay = (props) => {
     };
   });
 
-  return (
-    <div ref={modalOverlayRef} className={styles.overlay}>
-      {children}
-    </div>
-  );
+  return <div ref={modalOverlayRef} className={styles.overlay} />;
 };
 
 ModalOverlay.propTypes = {
-  children: PropTypes.node.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 

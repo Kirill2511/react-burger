@@ -9,18 +9,26 @@ const Modal = (props) => {
   const modalRoot = document.getElementById("modal-root");
 
   return ReactDOM.createPortal(
-    <ModalOverlay onClose={onClose}>
+    <>
+      <ModalOverlay onClose={onClose} />
       <div className={styles.modal}>
         <div
           className={`text text_type_main-large
                             ${title ? styles.withTitle : styles.withoutTitle}`}
         >
           {title}
-          <CloseIcon type="primary" onClick={onClose} />
+
+          <button
+              type="button"
+              className={styles.modalButton}
+              onClick={onClose}
+          >
+            <CloseIcon type="primary" />
+          </button>
         </div>
         <div className={styles.content}>{children}</div>
       </div>
-    </ModalOverlay>,
+    </>,
     modalRoot
   );
 };

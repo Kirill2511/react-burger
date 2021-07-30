@@ -6,6 +6,10 @@
     width: 272px;
 }
 
+.ingredientCard:hover {
+    cursor: pointer;
+}
+
 .ingredientName {
     display: flex;
     flex-wrap: wrap;
