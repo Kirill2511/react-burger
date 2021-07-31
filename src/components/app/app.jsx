@@ -17,9 +17,11 @@ const App = () => {
       try {
         const response = await fetch(url);
 
-        if (response && response.ok) {
+        if (response.ok) {
           const { data } = await response.json();
           setState({ ...state, data });
+        } else {
+          throw new Error(`Ошибка: ${response.status}`)
         }
       } catch (error) {
         setState({ ...state, hasError: true });
