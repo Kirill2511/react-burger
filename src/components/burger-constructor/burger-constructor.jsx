@@ -4,7 +4,6 @@ import {
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import PropTypes from "prop-types";
 import styles from "./burger-constructor.module.css";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../../services/appContext";
@@ -83,7 +82,7 @@ const BurgerConstructor = () => {
           <ConstructorElement
             type="top"
             isLocked={true}
-            text={bun.name}
+            text={`${bun.name} (верх)`}
             price={bun.price}
             thumbnail={bun.image_mobile}
           />
@@ -114,7 +113,7 @@ const BurgerConstructor = () => {
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text={bun.name}
+            text={`${bun.name} (низ)`}
             price={bun.price}
             thumbnail={bun.image_mobile}
           />
@@ -133,26 +132,6 @@ const BurgerConstructor = () => {
       </div>
     </section>
   );
-};
-
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string,
-      name: PropTypes.string,
-      type: PropTypes.string,
-      proteins: PropTypes.number,
-      fat: PropTypes.number,
-      carbohydrates: PropTypes.number,
-      calories: PropTypes.number,
-      price: PropTypes.number,
-      image: PropTypes.string,
-      image_mobile: PropTypes.string,
-      image_large: PropTypes.string,
-      __v: PropTypes.number,
-    }).isRequired
-  ),
-  hasError: PropTypes.bool,
 };
 
 export default BurgerConstructor;

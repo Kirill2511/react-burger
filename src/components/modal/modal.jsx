@@ -19,9 +19,9 @@ const Modal = (props) => {
           {title}
 
           <button
-              type="button"
-              className={styles.modalButton}
-              onClick={onClose}
+            type="button"
+            className={styles.modalButton}
+            onClick={onClose}
           >
             <CloseIcon type="primary" />
           </button>

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import doneIcon from "../../images/doneIcon.svg";
 import styles from "./order-details.module.css";
 
@@ -29,6 +30,17 @@ const OrderDetails = (props) => {
       </div>
     </>
   );
+};
+
+OrderDetails.propTypes = {
+    orderDetails: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        order: PropTypes.shape({
+            number: PropTypes.number,
+        }).isRequired,
+        success: PropTypes.bool.isRequired,
+    }),
+    orderError: PropTypes.string,
 };
 
 export default OrderDetails;
