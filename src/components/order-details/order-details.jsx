@@ -1,29 +1,34 @@
-import doneIcon from '../../images/doneIcon.svg';
-import styles from './order-details.module.css';
+import doneIcon from "../../images/doneIcon.svg";
+import styles from "./order-details.module.css";
 
-const OrderDetails = () => (
+const OrderDetails = (props) => {
+  const { orderDetails, orderError } = props;
+
+  if (orderError) {
+    return <span className="text text_type_main-medium">{orderError}</span>;
+  }
+  return (
     <>
-        <span className={`text text_type_digits-large ${styles.orderId}`}>
-            034546
+      <span className={`text text_type_digits-large ${styles.orderId}`}>
+        {orderDetails.order.number}
+      </span>
+      <span className="text text_type_main-medium">идентификатор заказа</span>
+      <div className={styles.doneIcon}>
+        <img src={doneIcon} alt="done-icon" />
+      </div>
+      <div className={styles.description}>
+        <span className="text text_type_main-default">
+          Ваш заказ начали готовить
         </span>
-        <span className="text text_type_main-medium">
-            идентификатор заказа
+        <span
+          style={{ color: "#8585AD" }}
+          className="text text_type_main-default"
+        >
+          Дождитесь готовности на орбитальной станции
         </span>
-        <div className={styles.doneIcon}>
-            <img src={doneIcon} alt="done-icon" />
-        </div>
-        <div className={styles.description}>
-            <span className="text text_type_main-default">
-                Ваш заказ начали готовить
-            </span>
-            <span
-                style={{ color: '#8585AD' }}
-                className="text text_type_main-default"
-            >
-                Дождитесь готовности на орбитальной станции
-            </span>
-        </div>
+      </div>
     </>
-);
+  );
+};
 
 export default OrderDetails;
