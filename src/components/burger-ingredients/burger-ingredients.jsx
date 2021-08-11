@@ -1,34 +1,28 @@
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientCard from "../ingredient-card/ingredient-card";
 import styles from "./burger-ingredients.module.css";
-import PropTypes from "prop-types";
-import { useCallback, useState } from "react";
-import Modal from "../modal/modal";
-import IngredientDetails from "../ingredients-details/ingredients-details";
+import { useCallback, useContext } from "react";
+import { AppContext } from "../../services/appContext";
 
-const BurgerIngredients = (props) => {
-  const { ingredients, hasError } = props;
-  const [state, setState] = useState({
-    modalIsOpen: false,
-    ingredientData: {},
-  });
+const BurgerIngredients = () => {
+  const { ingredients, dispatch } = useContext(AppContext);
 
-  const onIngredientCardClick = useCallback((data) => {
-    setState({
-      modalIsOpen: true,
-      ingredientData: data,
-    });
-  }, []);
-
-  if (hasError) {
-    return (
-      <section style={{ width: 600 }} className="mr-10">
-        <h1 style={{ height: 40 }} className="text text_type_main-large">
-          Ошибка получения данных...
-        </h1>
-      </section>
-    );
-  }
+  const onIngredientCardClick = useCallback(
+    (data) => {
+      switch (data.type) {
+        case "bun":
+          dispatch({ type: "addBun", payload: data });
+          break;
+        case "sauce":
+        case "main":
+          dispatch({ type: "addTopping", payload: data });
+          break;
+        default:
+          break;
+      }
+    },
+    [dispatch]
+  );
 
   return (
     <section style={{ width: 600 }} className="mr-10">
@@ -39,13 +33,13 @@ const BurgerIngredients = (props) => {
         Соберите бургер
       </h1>
       <div style={{ display: "flex" }}>
-        <Tab value="buns" active={true} onClick={() => {}}>
+        <Tab value="bun" active={true} onClick={() => {}}>
           Булки
         </Tab>
-        <Tab value="sauces" active={false} onClick={() => {}}>
+        <Tab value="sauce" active={false} onClick={() => {}}>
           Соусы
         </Tab>
-        <Tab value="mains" active={false} onClick={() => {}}>
+        <Tab value="main" active={false} onClick={() => {}}>
           Начинки
         </Tab>
       </div>
@@ -93,36 +87,8 @@ const BurgerIngredients = (props) => {
             ))}
         </ul>
       </div>
-      {state.modalIsOpen ? (
-        <Modal
-          title="Детали ингредиента"
-          onClose={() => setState({ ...state, modalIsOpen: false })}
-        >
-          <IngredientDetails data={state.ingredientData} />
-        </Modal>
-      ) : null}
     </section>
   );
-};
-
-BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string,
-      name: PropTypes.string,
-      type: PropTypes.string,
-      proteins: PropTypes.number,
-      fat: PropTypes.number,
-      carbohydrates: PropTypes.number,
-      calories: PropTypes.number,
-      price: PropTypes.number,
-      image: PropTypes.string,
-      image_mobile: PropTypes.string,
-      image_large: PropTypes.string,
-      __v: PropTypes.number,
-    }).isRequired
-  ),
-  hasError: PropTypes.bool,
 };
 
 export default BurgerIngredients;
