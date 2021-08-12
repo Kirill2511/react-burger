@@ -1,12 +1,14 @@
-import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from "prop-types";
+import React from "react";
+import ReactDOM from "react-dom";
+
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import styles from "./modal.module.css";
 
 const Modal = (props) => {
   const { children, title, onClose } = props;
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.querySelector("#modal-root");
 
   return ReactDOM.createPortal(
     <>

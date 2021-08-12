@@ -1,11 +1,48 @@
-import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import styles from "./ingredient-card.module.css";
+import {
+  Counter,
+  CurrencyIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
+import React, { memo, useEffect, useState } from "react";
+import { useDrag } from "react-dnd";
+import { useSelector } from "react-redux";
+
+import styles from "./ingredient-card.module.css";
+
+const burger = (state) => state.burger;
 
 const IngredientCard = (props) => {
   const { data, onClick } = props;
+  const [count, setCount] = useState(0);
+  const { burgerData } = useSelector(burger);
+
+  const [{opacity}, dragIngredientCard] = useDrag({
+    type: "ingredient-card",
+    item: { id: data._id },
+    collect: monitor => ({
+      opacity: monitor.isDragging() ? 0.5 : 1
+    })
+  });
+
+  useEffect(() => {
+    const { bun, toppings } = burgerData;
+
+    if (data.type === "bun") {
+      setCount(
+        Object.values(bun).filter((value) => value === data._id).length * 2
+      );
+    } else {
+      setCount(toppings.filter((topping) => topping._id === data._id).length);
+    }
+  }, [burgerData, data]);
+
   return (
-    <div style={{overflow: 'hidden'}} onClick={() => onClick(data)}>
+    <div
+      onClick={() => onClick(data)}
+      ref={dragIngredientCard}
+      style={{ overflow: "hidden", opacity }}
+      role="presentation"
+    >
       <li className={`${styles.ingredientCard}`}>
         <img className="ml-4 mr-4" src={data.image} alt={data.name} />
         <span
@@ -20,6 +57,7 @@ const IngredientCard = (props) => {
         >
           {data.name}
         </span>
+        {count > 0 && <Counter count={count} size="default" />}
       </li>
     </div>
   );
@@ -43,4 +81,4 @@ IngredientCard.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-export default IngredientCard;
+export default memo(IngredientCard);

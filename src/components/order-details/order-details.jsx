@@ -1,17 +1,22 @@
-import PropTypes from "prop-types";
+import React from "react";
+import { useSelector } from "react-redux";
+
 import doneIcon from "../../images/doneIcon.svg";
 import styles from "./order-details.module.css";
 
-const OrderDetails = (props) => {
-  const { orderDetails, orderError } = props;
+const order = (state) => state.order;
+
+const OrderDetails = () => {
+  const { orderDetails, orderError } = useSelector(order);
 
   if (orderError) {
     return <span className="text text_type_main-medium">{orderError}</span>;
   }
+
   return (
     <>
       <span className={`text text_type_digits-large ${styles.orderId}`}>
-        {orderDetails.order.number}
+        {orderDetails.success ? orderDetails.order.number : null}
       </span>
       <span className="text text_type_main-medium">идентификатор заказа</span>
       <div className={styles.doneIcon}>
@@ -30,17 +35,6 @@ const OrderDetails = (props) => {
       </div>
     </>
   );
-};
-
-OrderDetails.propTypes = {
-    orderDetails: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        order: PropTypes.shape({
-            number: PropTypes.number,
-        }).isRequired,
-        success: PropTypes.bool.isRequired,
-    }),
-    orderError: PropTypes.string,
 };
 
 export default OrderDetails;
