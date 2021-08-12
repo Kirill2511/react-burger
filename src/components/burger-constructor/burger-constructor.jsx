@@ -4,115 +4,109 @@ import {
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import styles from "./burger-constructor.module.css";
-import { useContext, useEffect } from "react";
-import { AppContext } from "../../services/appContext";
+import PropsTypes from "prop-types";
+import React, { useCallback, useEffect } from "react";
+import { useDrop } from "react-dnd";
+import { useDispatch, useSelector } from "react-redux";
 
-const BurgerConstructor = () => {
-  const { burgerData, totalPrice, dispatch } = useContext(AppContext);
+import {
+  deleteTopping,
+  getTotalPrice,
+  sortToppings,
+} from "../../services/actions/constructorActions";
+import { openOrderModal } from "../../services/actions/modalActions";
+import { getOrderDetails } from "../../services/actions/orderActions";
+import MovableTopping from "../movable-topping/movable-topping";
+import styles from "./burger-constructor.module.css";
+
+const burger = (state) => state.burger;
+
+const BurgerConstructor = (props) => {
+  const { onDropHandler } = props;
+  const dispatch = useDispatch();
+  const { burgerData, totalPrice } = useSelector(burger);
   const { bun, toppings } = burgerData;
 
-  useEffect(() => {
-    const bunPrise = bun.price * 2 || 0;
-    const toppingPrise = toppings.reduce((total, current) => {
-      return total + current.price;
-    }, 0);
+  const [, dropIngredientCard] = useDrop({
+    accept: "ingredient-card",
+    drop(itemId) {
+      onDropHandler(itemId);
+    },
+  });
+  const [, dropTopping] = useDrop({ accept: "sort-toppings" });
 
-    dispatch({
-      type: "totalPrice",
-      payload: bunPrise + toppingPrise,
-    });
-  }, [bun, toppings, dispatch]);
+  useEffect(() => {
+    dispatch(getTotalPrice(burgerData));
+  }, [dispatch, burgerData]);
+
+  const findTopping = useCallback(
+    (id) => {
+      const topping = toppings.find((topping) => topping._id === id);
+
+      return {
+        topping,
+        index: toppings.indexOf(topping),
+      };
+    },
+    [toppings]
+  );
+
+  const moveTopping = useCallback(
+    (index, atIndex) => {
+      dispatch(sortToppings(index, atIndex));
+    },
+    [dispatch]
+  );
 
   const onSubmit = () => {
-    const { bun } = burgerData;
-
-    if (bun._id) {
-      const requestData = {
-        ingredients: Object.keys(burgerData).flatMap((ingredientType) => {
-          switch (ingredientType) {
-            case "bun":
-              return burgerData.bun._id;
-            case "toppings":
-              return burgerData[ingredientType].map(
-                (ingredient) => ingredient._id
-              );
-            default:
-              return [];
-          }
-        }),
-      };
-
-      const request = new Request(
-        "https://norma.nomoreparties.space/api/orders",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestData),
-        }
-      );
-      (async () => {
-        try {
-          const response = await fetch(request);
-
-          if (!response.ok) {
-            throw new Error(`Ошибка: ${response.status}`);
-          }
-          const data = await response.json();
-          dispatch({ type: "order", payload: data });
-        } catch (error) {
-          dispatch({
-            type: "orderError",
-            payload: "Ошибка получения данных...",
-          });
-        }
-      })();
-    } else {
-      dispatch({
-        type: "orderError",
-        payload: "Должна быть выбрана булка для бургера",
-      });
-    }
+    dispatch(getOrderDetails(burgerData));
+    dispatch(openOrderModal());
   };
 
   return (
     <section style={{ width: 600 }}>
-      <div className={`${styles.ingredientsWrapper} mt-25`}>
+      <div
+        ref={dropIngredientCard}
+        className={`${styles.ingredientsWrapper} mt-25`}
+      >
         {bun._id && (
           <ConstructorElement
             type="top"
-            isLocked={true}
+            isLocked
             text={`${bun.name} (верх)`}
             price={bun.price}
             thumbnail={bun.image_mobile}
           />
         )}
-        <ul className={styles.toppings}>
+        <ul ref={dropTopping} className={styles.toppings}>
           {toppings.map((topping, index) => (
             <li
+              /* eslint-disable-next-line react/no-array-index-key */
               key={`${topping._id}-${index}`}
               style={{ width: 568, marginRight: 18 }}
             >
-              <DragIcon type="primary" />
-              <ConstructorElement
-                isLocked={false}
-                text={topping.name}
-                price={topping.price}
-                thumbnail={topping.image_mobile}
-                handleClose={() =>
-                  dispatch({
-                    type: "deleteTopping",
-                    payload: index,
-                  })
-                }
-              />
+              <MovableTopping
+                toppingId={topping._id}
+                toppingIndex={index}
+                findTopping={findTopping}
+                moveTopping={moveTopping}
+              >
+                <DragIcon type="primary" />
+                <ConstructorElement
+                  isLocked={false}
+                  text={topping.name}
+                  price={topping.price}
+                  thumbnail={topping.image_mobile}
+                  handleClose={() => dispatch(deleteTopping(index))}
+                />
+              </MovableTopping>
             </li>
           ))}
         </ul>
         {bun._id && (
           <ConstructorElement
             type="bottom"
-            isLocked={true}
+            isLocked
             text={`${bun.name} (низ)`}
             price={bun.price}
             thumbnail={bun.image_mobile}
@@ -132,6 +126,10 @@ const BurgerConstructor = () => {
       </div>
     </section>
   );
+};
+
+BurgerConstructor.propsTypes = {
+  onDropHandler: PropsTypes.func,
 };
 
 export default BurgerConstructor;

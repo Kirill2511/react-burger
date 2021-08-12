@@ -1,4 +1,5 @@
 .ingredientsWrapper {
+    height: 658px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -10,19 +11,20 @@
 }
 
 .toppings::-webkit-scrollbar-track {
-    background: #2F2F37;
+    background: #2f2f37;
 }
 
 .toppings::-webkit-scrollbar-thumb {
-    background: #8585AD;
+    background: #8585ad;
 }
 
 .toppings {
+    height: 100vh;
     display: flex;
     overflow: auto;
     flex-direction: column;
     max-height: 466px;
-    margin: 0;
+    margin: auto 0;
     padding: 0;
     list-style-type: none;
     gap: 16px;
@@ -35,6 +37,10 @@
 .submitBlock {
     display: flex;
     justify-content: flex-end;
+}
+
+.element {
+    flex-grow: 0;
 }
 
 .totalPrice {

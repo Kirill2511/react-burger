@@ -1,8 +1,9 @@
 import {BurgerIcon, ListIcon, Logo, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import React from 'react';
+
 import styles from './app-header.module.css'
 
-const AppHeader = () => {
-    return (
+const AppHeader = () => (
     <header className={styles.header}>
         <nav className={`${styles.headerContent} pt-4 pb-4`}>
             <div style={{display: 'flex'}}>
@@ -27,5 +28,4 @@ const AppHeader = () => {
         </nav>
     </header>
     )
-}
 export default AppHeader;

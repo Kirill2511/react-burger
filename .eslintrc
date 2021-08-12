@@ -1,0 +1,24 @@
+{
+  "extends": ["auto"],
+  "settings": {
+    "babel": true
+  },
+  "rules": {
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": ["_id"]
+      }
+    ],
+    "no-shadow": "off",
+    "unicorn/consistent-function-scoping": "off",
+    "promise/always-return": "off",
+    "react/prop-types": "off"
+  },
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  }
+}
+

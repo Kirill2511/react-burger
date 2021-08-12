@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import React, { useCallback, useEffect, useRef } from "react";
+
 import styles from "./modal-overlay.module.css";
 
 const ModalOverlay = (props) => {
