@@ -1,0 +1,261 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+body,
+form {
+  font-family: "Jet Brains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+@media (max-width: 991px) {
+  body {
+    font-size: 14px;
+    line-height: 1.43;
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+/* container */
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* logo */
+
+.logo {
+  display: inline-flex;
+  transition: opacity 0.3s ease;
+  will-change: opacity;
+}
+
+.logo:hover,
+.logo:focus,
+.logo:active {
+  opacity: 0.8;
+}
+
+/* scrollbar-vertical */
+
+.scrollbar-vertical {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-color: #8585ad #2f2f37;
+  scrollbar-width: thin;
+}
+
+.scrollbar-vertical::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-vertical::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+
+.scrollbar-vertical::-webkit-scrollbar-thumb {
+  background: #8585ad;
+}
+
+/* content */
+
+.content__body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 30px;
+}
+
+.content__title {
+  text-align: left;
+}
+
+/* constructor-element */
+
+.constructor-element__row,
+.constructor-element {
+  width: 100% !important;
+}
+
+.constructor-element {
+  display: inline-flex !important;
+  max-width: 536px !important;
+  min-height: 80px !important;
+  margin-bottom: 0 !important;
+  background: #1c1c21 !important;
+}
+
+.constructor-element__price {
+  margin-left: auto;
+}
+
+/* tabs */
+
+.tabs {
+  position: relative;
+}
+
+.tabs__list {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tabs__line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 33.3333%;
+  height: 2px;
+  transition: transform 0.5s ease;
+  background-color: #4c4cff;
+  will-change: transform;
+}
+
+.tabs__list [class*="tab_tab__"] {
+  flex-basis: 0;
+  flex-grow: 1;
+  min-width: 106px;
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+.tabs__list [class*="tab_tab_type_current__"] {
+  box-shadow: none;
+}
+
+.tabs__list [class*="tab_tab_type_current__"]:nth-of-type(2) ~ .tabs__line {
+  transform: translateX(100%);
+}
+
+.tabs__list [class*="tab_tab_type_current__"]:nth-of-type(3) ~ .tabs__line {
+  transform: translateX(200%);
+}
+
+/* FORM */
+
+.form {
+  font-size: 16px;
+  max-width: 496px;
+  margin: 75px auto 0;
+  padding-right: 8px;
+  padding-left: 8px;
+  text-align: center;
+}
+
+.form__logo,
+.form__body {
+  margin-bottom: 80px;
+}
+
+.form__title {
+  font-size: 24px;
+  line-height: 1.25;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.form__item {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.form__icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+.form__text {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #8585ad;
+}
+
+.form__link {
+  display: inline-block;
+  padding-left: 5px;
+  vertical-align: baseline;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #4c4cff;
+}
+
+.form__link:hover,
+.form__link:focus,
+.form__link:active {
+  text-decoration: underline;
+  color: #4c4cff;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  text-decoration: none;
+  color: #8585ad;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link:active,
+.nav-link--active {
+  text-decoration: none;
+  color: #fff;
+}
+
+.nav-link:hover svg,
+.nav-link:focus svg,
+.nav-link:active svg,
+.nav-link--active svg {
+  fill: #fff;
+}
+
+.order__statusReady {
+  color: #f2f2f3;
+}
+
+.order__statusCancel {
+  color: #e52b1a;
+}
+
+.order__statusProcess {
+  color: #00cccc;
+}
+
+[class*="profile_container"] .input__icon {
+  position: relative;
+  z-index: 99;
+  cursor: pointer;
+}
+
+[class*="profile-form_"] .input__textfield {
+  color: #8585ad;
+}
+
+[class*="profile-form_"] .input__textfield:focus {
+  color: #fff;
+}

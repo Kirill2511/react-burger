@@ -1,0 +1,21 @@
+.menu {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.menu__link {
+  display: block;
+  text-decoration: none;
+  color: var(--text-inactive-color);
+  padding: 5px 20px;
+  transition: color .3s ease;
+}
+
+.menu__link:hover,
+.menu__link:focus,
+.menu__link:active,
+.menu__linkActive {
+  text-decoration: none;
+  color: var(--text-primary-color);
+}

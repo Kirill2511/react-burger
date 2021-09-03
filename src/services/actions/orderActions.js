@@ -1,51 +1,48 @@
-import { getOrderDetailsRequest } from "../api";
+import { API_LINK_ORDERS } from "../api";
 
-export const MAKE_ORDER = "MAKE_ORDER";
-export const ORDER_ERROR = "ORDER_ERROR";
-export const CLEAR_ORDER_ERROR = "CLEAR_ORDER_ERROR";
+export const GET_ORDER_REQUEST = "GET_ORDER_REQUEST";
+export const GET_ORDER_SUCCESS = "GET_ORDER_SUCCESS";
+export const GET_ORDER_FAILED = "GET_ORDER_FAILED";
+export const SET_ORDER_ITEMS = "SET_ORDER_ITEMS";
 
-export const getOrderDetails = (burgerData) => {
-  const { bun } = burgerData;
+export const getOrder = (payload) => async (dispatch) => {
+  dispatch({
+    type: GET_ORDER_REQUEST,
+  });
 
-  return (dispatch) => {
-    dispatch({ type: CLEAR_ORDER_ERROR });
+  return await fetch(API_LINK_ORDERS, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(async (response) => {
+      if (response.ok) {
+        return await response.json();
+      }
+        throw new Error("Something went wrong");
 
-    if (bun._id) {
-      const requestData = {
-        ingredients: Object.keys(burgerData).flatMap((ingredientType) => {
-          switch (ingredientType) {
-            case "bun":
-              // eslint-disable-next-line unicorn/consistent-destructuring
-              return burgerData.bun._id;
-
-            case "toppings":
-              return burgerData[ingredientType].map(
-                (ingredient) => ingredient._id
-              );
-
-            default:
-              return [];
-          }
-        }),
-      };
-
-      getOrderDetailsRequest(requestData)
-        .then((response) => {
-          if (response && response.success) {
-            dispatch({ type: MAKE_ORDER, payload: response });
-          }
-        })
-        .catch(() => {
-          dispatch({
-            type: ORDER_ERROR,
-            payload: "Ошибка получения данных...",
-          });
+    })
+    .then((response) => {
+      if (response && response.success) {
+        dispatch({
+          type: GET_ORDER_SUCCESS,
+          orderId: response.order.number,
         });
-    } else {
+      }
+    })
+    .catch(() => {
       dispatch({
-        type: ORDER_ERROR,
-        payload: "Должна быть выбрана булка для бургера!",
+        type: GET_ORDER_FAILED,
       });
-    }
-  };
+    });
+};
+
+export const setOrderItems = (itemsId) => (dispatch) => {
+  dispatch({
+    type: SET_ORDER_ITEMS,
+    itemsId,
+  });
 };

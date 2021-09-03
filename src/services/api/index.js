@@ -1,31 +1,17 @@
-export const getIngredientsRequest = async () => {
-    const request = new Request(
-        'https://norma.nomoreparties.space/api/ingredients',
-    );
-    const response = await fetch(request);
+const API_LINK = 'https://norma.nomoreparties.space/api'
+const API_LINK_AUTH = `${API_LINK}/auth`;
 
-    if (!response.ok) {
-        throw new Error(`Response error, status: ${response.status}`);
-    }
+export const API_LINK_INGREDIENTS = `${API_LINK}/ingredients`;
+export const API_LINK_ORDERS = `${API_LINK}/orders`;
 
-    return response.json();
-};
+export const API_LINK_PASSWORD_RESET = `${API_LINK}/password-reset`; // POST эндпоинт для сброса пароля
+export const API_LINK_PASSWORD_UPDATE = `${API_LINK_PASSWORD_RESET}/reset`; // POST эндпоинт для создания нового пароля
 
-export const getOrderDetailsRequest = async (requestData) => {
-    const request = new Request(
-        'https://norma.nomoreparties.space/api/orders',
-        {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestData),
-        },
-    );
+export const API_LINK_REGISTER = `${API_LINK_AUTH}/register`; // POST эндпоинт для регистрации пользователя
+export const API_LINK_LOGIN = `${API_LINK_AUTH}/login`; // POST эндпоинт для авторизации
+export const API_LINK_LOGOUT = `${API_LINK_AUTH}/logout`; // POST эндпоинт для выхода из системы
+export const API_LINK_TOKEN = `${API_LINK_AUTH}/token`; // POST эндпоинт обновления токена
 
-    const response = await fetch(request);
-
-    if (!response.ok) {
-        throw new Error(`Response error, status: ${response.status}`);
-    }
-
-    return response.json();
-}
+// GET эндпоинт получения данных о пользователе
+// PATCH эндпоинт обновления данных о пользователе
+export const API_LINK_USER = `${API_LINK_AUTH}/user`;

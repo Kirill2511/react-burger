@@ -1,0 +1,43 @@
+.page404 {
+    text-align: center;
+    min-height: calc(100vh - 103px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.title,
+.text {
+    margin: 0 0 1.5rem;
+}
+
+.num {
+    font-size: 100px;
+    display: block;
+}
+
+.link {
+    color: #fff;
+}
+
+.link:hover,
+.link:focus,
+.link:active {
+    text-decoration: none;
+}
+
+@media (max-width: 576px) {
+    .title {
+        font-size: 7vw;
+    }
+
+    .num {
+        line-height: 1;
+        margin-top: 1rem;
+    }
+}

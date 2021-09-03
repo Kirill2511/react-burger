@@ -1,38 +1,44 @@
 import {
-	INGREDIENTS_ERROR,
-    INGREDIENTS_FETCH,
-	SHOW_INGREDIENT_INFO,
-} from '../actions/ingredientsActions';
+    GET_FEED_REQUEST,
+    GET_FEED_SUCCESS,
+    GET_FEED_FAILED
+} from '../actions/feed';
 
-const initialState = {
-    ingredients: [],
-	ingredientsError: '',
-	ingredientInfo: {},
+export const initialState = {
+    orders: [],
+    isFeedRequest: false,
+    isFeedSuccess: false,
+    isFeedFailed: false
 };
 
-const ingredientsReducer = (state = initialState, action) => {
-	switch (action.type) {
-		case INGREDIENTS_FETCH:
-			return {
+export const feedReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case GET_FEED_REQUEST:
+            return {
                 ...state,
-                ingredients: action.payload,
-            };
+                isFeedRequest: true,
+                isFeedSuccess: false,
+                isFeedFailed: false
+            }
 
-		case INGREDIENTS_ERROR:
-			return {
+        case GET_FEED_SUCCESS:
+            return {
                 ...state,
-                ingredientsError: action.payload,
-            };
+                orders: action.data,
+                isFeedRequest: false,
+                isFeedSuccess: true,
+                isFeedFailed: false
+            }
 
-		case SHOW_INGREDIENT_INFO:
-			return {
-				...state,
-				ingredientInfo: action.payload,
-			};
+        case GET_FEED_FAILED:
+            return {
+                ...state,
+                isFeedRequest: false,
+                isFeedSuccess: false,
+                isFeedFailed: true
+            }
 
-		default:
-			return state;
-	}
-};
-
-export default ingredientsReducer;
+        default:
+            return state;
+    }
+}

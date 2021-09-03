@@ -1,135 +1,187 @@
-import {
-  Button,
-  ConstructorElement,
-  CurrencyIcon,
-  DragIcon,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import PropsTypes from "prop-types";
-import React, { useCallback, useEffect } from "react";
+import { Button, ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useEffect, useMemo } from "react";
 import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-import {
-  deleteTopping,
-  getTotalPrice,
-  sortToppings,
-} from "../../services/actions/constructorActions";
-import { openOrderModal } from "../../services/actions/modalActions";
-import { getOrderDetails } from "../../services/actions/orderActions";
-import MovableTopping from "../movable-topping/movable-topping";
+import { addBun, addtem, resetState } from "../../services/actions/dataActions";
+import { closeOrderModal, openOrderModal } from "../../services/actions/modalOrderActions";
+import { getOrder, setOrderItems } from "../../services/actions/orderActions";
+import BurgerConstructorItem from "../burger-constructor-item/burger-constructor-item";
+import Error from "../error/error";
+import Loader from "../loader/loader";
+import Modal from "../modal/modal";
+import OrderDetails from "../order-details/order-details";
+import Spinner from "../spinner/spinner";
+import TotalPrice from "../total-price/total-price";
 import styles from "./burger-constructor.module.css";
 
-const burger = (state) => state.burger;
+const user = (state) => state.user;
+const modalOrder = (store) => store.modalOrder;
+const order = (store) => store.order;
+const data = (store) => store.data;
 
-const BurgerConstructor = (props) => {
-  const { onDropHandler } = props;
+// eslint-disable-next-line sonarjs/cognitive-complexity
+const BurgerConstructor = () => {
   const dispatch = useDispatch();
-  const { burgerData, totalPrice } = useSelector(burger);
-  const { bun, toppings } = burgerData;
+  const { items, bun } = useSelector(data);
+  const { orderId, itemsId, hasError, isLoading } = useSelector(order);
+  const { isModalOrderOpened } = useSelector(modalOrder);
+  const { isLoggined } = useSelector(user);
 
-  const [, dropIngredientCard] = useDrop({
-    accept: "ingredient-card",
-    drop(itemId) {
-      onDropHandler(itemId);
-    },
-  });
-  const [, dropTopping] = useDrop({ accept: "sort-toppings" });
+  const totalPrice = useMemo(() => {
+    const bunPrice = bun ? bun.price * 2 : 0;
+    const itemsPrice = items ? items.reduce((acc, val) => acc + val.price, 0) : 0;
+    return itemsPrice + bunPrice;
+  }, [items, bun]);
 
   useEffect(() => {
-    dispatch(getTotalPrice(burgerData));
-  }, [dispatch, burgerData]);
+    const order = items.map((item) => item._id);
+    // eslint-disable-next-line babel/no-unused-expressions
+    bun && order.push(bun._id);
+    dispatch(setOrderItems(order));
+  }, [dispatch, items, bun]);
 
-  const findTopping = useCallback(
-    (id) => {
-      const topping = toppings.find((topping) => topping._id === id);
+  const handleDrop = (item) => {
+    // eslint-disable-next-line sonarjs/no-small-switch
+    switch (item.type) {
+      case "bun":
+        return dispatch(addBun(item));
 
-      return {
-        topping,
-        index: toppings.indexOf(topping),
-      };
+      default:
+        return dispatch(addtem(item));
+    }
+  };
+
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: "item",
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+    }),
+    drop(item) {
+      handleDrop(item);
     },
-    [toppings]
-  );
+  });
 
-  const moveTopping = useCallback(
-    (index, atIndex) => {
-      dispatch(sortToppings(index, atIndex));
-    },
-    [dispatch]
-  );
+  const bgColor = isHover && "rgba(0, 0, 0, .5)";
 
-  const onSubmit = () => {
-    dispatch(getOrderDetails(burgerData));
+  const makeOrder = () => {
+    dispatch(
+      getOrder({
+        ingredients: itemsId,
+      })
+    );
     dispatch(openOrderModal());
   };
 
+  const closeModal = () => {
+    dispatch(closeOrderModal());
+    dispatch(resetState());
+  };
+
   return (
-    <section style={{ width: 600 }}>
-      <div
-        ref={dropIngredientCard}
-        className={`${styles.ingredientsWrapper} mt-25`}
-      >
-        {bun._id && (
-          <ConstructorElement
-            type="top"
-            isLocked
-            text={`${bun.name} (верх)`}
-            price={bun.price}
-            thumbnail={bun.image_mobile}
-          />
+    <section className={`${styles.burgerConstructor}`}>
+      <>
+        <div className={`${styles.burgerConstructor__inner}`} style={{ bgColor }} ref={dropTarget}>
+          {bun || items.length > 0 ? (
+            <>
+              {bun !== null ? (
+                bun && (
+                  <div className={`${styles.burgerConstructor__head}`}>
+                    <button type="button" aria-label="Add" className={`${styles.burgerConstructor__drag}`} />
+                    <ConstructorElement
+                      type="top"
+                      isLocked
+                      text={`${bun.name} (верх)`}
+                      thumbnail={bun.image}
+                      price={bun.price}
+                      draggable={false}
+                    />
+                  </div>
+                )
+              ) : (
+                <div className={styles.burgerConstructor__preview} data-position="top">
+                  Добавить булочку (вверх)
+                </div>
+              )}
+
+              {items.length > 0 ? (
+                <div className={`${styles.burgerConstructor__body} scrollbar-vertical`}>
+                  {items.map((item, index) => {
+                    const { constructorItemId, name, image, price } = item;
+                    return (
+                      <BurgerConstructorItem
+                        key={item}
+                        id={constructorItemId}
+                        idx={index}
+                        text={name}
+                        thumbnail={image}
+                        price={price}
+                        draggable
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className={styles.burgerConstructor__preview}>Добавить начинку</div>
+              )}
+
+              {bun !== null ? (
+                bun && (
+                  <div className={`${styles.burgerConstructor__foot}`}>
+                    <button aria-label="add" type="button" className={`${styles.burgerConstructor__drag}`} />
+                    <ConstructorElement
+                      type="bottom"
+                      isLocked
+                      text={`${bun.name} (низ)`}
+                      thumbnail={bun.image}
+                      price={bun.price}
+                      draggable={false}
+                    />
+                  </div>
+                )
+              ) : (
+                <div className={styles.burgerConstructor__preview} data-position="bottom">
+                  Добавить булочку (низ)
+                </div>
+              )}
+            </>
+          ) : (
+            <div className={styles.burgerConstructor__previews}>
+              <div className={styles.burgerConstructor__preview}>Добавить ингредиенты</div>
+            </div>
+          )}
+        </div>
+
+        <div className={`${styles.burgerConstructor__bottom} pt-10 pb-10`}>
+          <div className="mr-10">
+            <TotalPrice totalPrice={totalPrice} />
+          </div>
+          <div className={styles.burgerConstructor__order}>
+            {isLoggined
+              ? bun &&
+                items.length > 0 && (
+                  <Button type="primary" size="medium" onClick={makeOrder}>
+                    Оформить заказ {isLoading ? <Spinner /> : null}
+                  </Button>
+                )
+              : bun &&
+                items.length > 0 && (
+                  <Link to="/login" className="form__link text text_type_main-medium pr-3" style={{ color: "#ffffff" }}>
+                    Войти {isLoading ? <Spinner /> : null}
+                  </Link>
+                )}
+          </div>
+        </div>
+
+        {isModalOrderOpened && (
+          <Modal handleClose={closeModal}>
+            {isLoading ? <Loader /> : hasError ? <Error /> : <OrderDetails orderId={orderId} />}
+          </Modal>
         )}
-        <ul ref={dropTopping} className={styles.toppings}>
-          {toppings.map((topping, index) => (
-            <li
-              /* eslint-disable-next-line react/no-array-index-key */
-              key={`${topping._id}-${index}`}
-              style={{ width: 568, marginRight: 18 }}
-            >
-              <MovableTopping
-                toppingId={topping._id}
-                toppingIndex={index}
-                findTopping={findTopping}
-                moveTopping={moveTopping}
-              >
-                <DragIcon type="primary" />
-                <ConstructorElement
-                  isLocked={false}
-                  text={topping.name}
-                  price={topping.price}
-                  thumbnail={topping.image_mobile}
-                  handleClose={() => dispatch(deleteTopping(index))}
-                />
-              </MovableTopping>
-            </li>
-          ))}
-        </ul>
-        {bun._id && (
-          <ConstructorElement
-            type="bottom"
-            isLocked
-            text={`${bun.name} (низ)`}
-            price={bun.price}
-            thumbnail={bun.image_mobile}
-          />
-        )}
-      </div>
-      <div className={`${styles.submitBlock} mt-10 mr-4`}>
-        <span
-          className={`${styles.totalPrice} text text_type_digits-medium mr-10`}
-        >
-          {totalPrice}&nbsp;
-          <CurrencyIcon type="primary" />
-        </span>
-        <Button type="primary" size="large" onClick={onSubmit}>
-          Оформить заказ
-        </Button>
-      </div>
+      </>
     </section>
   );
-};
-
-BurgerConstructor.propsTypes = {
-  onDropHandler: PropsTypes.func,
 };
 
 export default BurgerConstructor;

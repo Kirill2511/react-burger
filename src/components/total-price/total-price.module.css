@@ -1,0 +1,10 @@
+.totalPrice {
+  display: flex;
+  align-items: center;
+}
+
+.totalPrice__total svg {
+  width: 32px;
+  height: 32px;
+  fill: #fff;
+}
