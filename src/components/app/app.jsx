@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 
 import {
+  Page404,
   PageForgotPassword,
   PageLogin,
   PageProfile,
   PageProfileForm,
   PageRegister,
   PageResetPassword,
-  Page404,
 } from "../../pages";
 
 import { getData } from "../../services/actions/dataActions";
@@ -21,14 +21,14 @@ import { getUserInfo } from "../../services/actions/userActions";
 import { getCookie } from "../../services/helpers";
 
 import AppHeader from "../app-header/app-header";
-import Main from "../main/main";
-import Title from "../title/title";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import Modal from "../modal/modal";
 import Error from "../error/error";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 import Loader from "../loader/loader";
+import Main from "../main/main";
+import Title from "../title/title";
+import Modal from "../modal/modal";
 
 import ProtectedRouteAuth from "../protected-route-auth/protected-route-auth";
 import ProtectedRoutePasswordReset from "../protected-route-password-reset/protected-route-password-reset";
@@ -80,26 +80,31 @@ const App = () => {
               </DndProvider>
             )}
           </Route>
-          <ProtectedRouteAuth path="/register">
+          <ProtectedRouteAuth path="/register" exact>
             <PageRegister />
           </ProtectedRouteAuth>
-          <ProtectedRouteAuth path="/login">
+          <ProtectedRouteAuth path="/login" exact>
             <PageLogin />
           </ProtectedRouteAuth>
-          <ProtectedRouteAuth path="/forgot-password">
+          <ProtectedRouteAuth path="/forgot-password" exact>
             <PageForgotPassword />
           </ProtectedRouteAuth>
-          <ProtectedRoutePasswordReset path="/reset-password">
+          <ProtectedRoutePasswordReset path="/reset-password" exact>
             <PageResetPassword />
           </ProtectedRoutePasswordReset>
-          <ProtectedRouteProfile path="/profile">
+          <ProtectedRouteProfile path="/profile" exact>
             <PageProfile>
               <PageProfileForm />
             </PageProfile>
           </ProtectedRouteProfile>
-          <Route path="/ingredients/:id">
+          <ProtectedRouteProfile path="/profile/orders" exact>
+            <PageProfile />
+          </ProtectedRouteProfile>
+          <ProtectedRouteProfile path="/profile/orders/:id" exact />
+          <Route path="/ingredients/:id" exact>
             <IngredientDetails />
           </Route>
+          <Route path="/order" exact />
           <Route>
             <Page404 />
           </Route>

@@ -30,7 +30,7 @@ const AppHeader = () => {
               Конструктор
             </span>
           </NavLink>
-          <NavLink exact className="nav-link" activeClassName="nav-link--active" to="/">
+          <NavLink exact className="nav-link" activeClassName="nav-link--active" to="/order">
             <ListIcon type="secondary" />
             <span className="ml-2">Лента заказов</span>
           </NavLink>

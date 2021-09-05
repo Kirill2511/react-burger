@@ -1,7 +1,7 @@
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useLocation } from "react-router-dom";
 
 import Input from "../../components/input/input";
 import PasswordInput from "../../components/password-input/password-input";
@@ -12,7 +12,8 @@ const user = (state) => state.user;
 
 const PageLogin = () => {
   const dispatch = useDispatch();
-  const { isLoading } = useSelector(user);
+  const location = useLocation();
+  const { isLoading, name } = useSelector(user);
 
   const [formValue, setFormValue] = useState({
     email: "",
@@ -33,6 +34,13 @@ const PageLogin = () => {
     e.preventDefault();
     dispatch(loginUserRequest(formValue));
   };
+
+  if (name) {
+    const { from } = location.state || { from: { pathname: "/" } };
+    return (
+      <Redirect to={from} />
+    );
+  }
 
   return (
     <form className="form" action="#" method="POST" onSubmit={onSubmit}>
