@@ -1,6 +1,9 @@
+import './index.css'
+
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
 import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 
@@ -20,7 +23,9 @@ const store = createStore(rootReducer, enhancer);
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </Provider>
   </React.StrictMode>,
   document.querySelector("#root")

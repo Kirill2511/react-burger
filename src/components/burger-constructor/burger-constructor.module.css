@@ -1,54 +1,98 @@
-.ingredientsWrapper {
-    height: 658px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 16px;
+.burgerConstructor,
+.burgerConstructor__head {
+  position: relative;
 }
 
-.toppings::-webkit-scrollbar {
-    width: 12px;
+.burgerConstructor__foot .burgerConstructor__item {
+  margin-bottom: 0;
 }
 
-.toppings::-webkit-scrollbar-track {
-    background: #2f2f37;
+.burgerConstructor__head {
+  margin-bottom: 16px;
 }
 
-.toppings::-webkit-scrollbar-thumb {
-    background: #8585ad;
+.burgerConstructor__head .burgerConstructor__drag,
+.burgerConstructor__foot .burgerConstructor__drag {
+  pointer-events: none;
+  opacity: 0;
 }
 
-.toppings {
-    height: 100vh;
-    display: flex;
-    overflow: auto;
-    flex-direction: column;
-    max-height: 466px;
-    margin: auto 0;
-    padding: 0;
-    list-style-type: none;
-    gap: 16px;
+.burgerConstructor__inner {
+  display: flex;
+  flex-direction: column;
+  padding-left: 28px;
 }
 
-.toppings > li > svg {
-    margin-right: 8px;
+.burgerConstructor__body {
+  min-height: 50px;
+  max-height: 480px;
+  padding-right: 8px;
 }
 
-.submitBlock {
-    display: flex;
-    justify-content: flex-end;
+.burgerConstructor__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-.element {
-    flex-grow: 0;
+.burgerConstructor__order:not(button) {
+  font-size: 0;
 }
 
-.totalPrice {
-    display: flex;
-    align-items: center;
+.burgerConstructor__order button {
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
-.totalPrice > svg {
-    width: 33px;
-    height: 33px;
+
+.burgerConstructor__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  margin-top: 10px;
+  margin-bottom: 25px;
+  margin-left: 32px;
+  cursor: pointer;
+  transition: .3s ease;
+  color: #8585AD;
+  border: 2px dashed #8585AD;
+  border-radius: 25px;
+}
+
+.burgerConstructor__add:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.burgerConstructor__previews {
+  width: 100%;
+  margin-top: 3em;
+}
+
+.burgerConstructor__preview {
+  font-family: 'Jet Brains Mono', serif;
+  font-size: 16px;
+  line-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 536px;
+  min-height: 80px;
+  margin-bottom: 16px;
+  margin-left: 32px;
+  padding: 16px 24px;
+  color: #8585AD;
+  border: 1px dashed #8585AD;
+  border-radius: var(--common-border-radius-s);
+  background-color: #1C1C21;
+}
+
+.burgerConstructor__preview[data-position=top]{
+  border-radius: var(--top-constructor-item-border-radius);
+}
+
+.burgerConstructor__preview[data-position=bottom]{
+  border-radius: var(--bottom-constructor-item-border-radius);
 }

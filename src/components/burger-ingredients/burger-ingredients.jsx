@@ -1,143 +1,90 @@
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, { useCallback, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo,useRef, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { useSelector } from "react-redux";
 
-import { showIngredientInfo } from "../../services/actions/ingredientsActions";
-import { openIngredientModal } from "../../services/actions/modalActions";
-import IngredientCard from "../ingredient-card/ingredient-card";
+import { openDataModal } from "../../services/actions/modalDataActions";
+import BurgerIngredient from "../burger-ingredient/burger-ingredient";
+import BurgerIngredientsCategory from "../burger-ingredients-category/burger-ingredients-category";
 import styles from "./burger-ingredients.module.css";
 
-const ingredient = (state) => state.ingredients;
+const ingredient = (state) => state.data;
 
 const BurgerIngredients = () => {
-  const [nearestTab, setNearestTab] = useState("bun");
-  const dispatch = useDispatch();
-  const { ingredients, ingredientsError } = useSelector(ingredient);
+  const { data } = useSelector(ingredient);
+  const [current, setCurrent] = useState("bun");
+  const ingredientsRef = useRef(null);
+  const bunTabClickRef = useRef(null);
+  const sauceTabClickRef = useRef(null);
+  const mainTabClickRef = useRef(null);
+  const [bunRef, inViewBuns] = useInView({ threshold: 0.1 });
+  const [sauceRef, inViewSauces] = useInView({ threshold: 0.1 });
+  const [mainRef, inViewMains] = useInView({ threshold: 0.1 });
 
-  const scrollContainerRef = useRef(null);
-  const bunsHeaderRef = useRef(null);
-  const saucesHeaderRef = useRef(null);
-  const mainsHeaderRef = useRef(null);
-
-  const handleScroll = () => {
-    const scrollContainerPosition =
-      scrollContainerRef.current.getBoundingClientRect().top;
-
-    const bunHeaderPosition = bunsHeaderRef.current.getBoundingClientRect().top;
-    const sauceHeaderPosition =
-      saucesHeaderRef.current.getBoundingClientRect().top;
-    const mainHeaderPosition =
-      mainsHeaderRef.current.getBoundingClientRect().top;
-
-    const bunsDiff = Math.abs(scrollContainerPosition - bunHeaderPosition);
-    const saucesDiff = Math.abs(scrollContainerPosition - sauceHeaderPosition);
-    const mainsDiff = Math.abs(scrollContainerPosition - mainHeaderPosition);
-
-    if (bunsDiff < saucesDiff) {
-      setNearestTab("bun");
-    } else if (saucesDiff < mainsDiff) {
-      setNearestTab("sauce");
-    } else {
-      setNearestTab("main");
+  const handleIngredientScroll = () => {
+    if (inViewBuns) {
+      setCurrent("bun");
+    } else if (inViewSauces) {
+      setCurrent("sauce");
+    } else if (inViewMains) {
+      setCurrent("main");
     }
   };
 
-  const onIngredientCardClick = useCallback(
-    (data) => {
-      dispatch(showIngredientInfo(data));
-      dispatch(openIngredientModal());
-    },
-    [dispatch]
-  );
+  useEffect(() => {
+    handleIngredientScroll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inViewBuns, inViewMains, inViewSauces]);
 
-  if (ingredientsError) {
-    return (
-      <section style={{ width: 600 }}>
-        <h1 style={{ height: 40 }} className="text text_type_main-large">
-          {ingredientsError}
-        </h1>
-      </section>
-    );
-  }
+  const onClickTab = (type, ref) => {
+    setCurrent(type);
+    // eslint-disable-next-line babel/no-unused-expressions
+    ref.current &&
+      ref.current.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
+  };
+
+  const dataBun = useMemo(() => data && data.filter((item) => item.type === "bun"), [data]);
+  const dataSauce = useMemo(() => data && data.filter((item) => item.type === "sauce"), [data]);
+  const dataMain = useMemo(() => data && data.filter((item) => item.type === "main"), [data]);
 
   return (
-    <section style={{ width: 600 }} className="mr-10">
-      <h1
-        style={{ height: 40 }}
-        className="text text_type_main-large mt-10 mb-5"
-      >
-        Соберите бургер
-      </h1>
-      <div style={{ display: "flex" }}>
-        <Tab value="bun" active={nearestTab === "bun"} onClick={() => {}}>
-          Булки
-        </Tab>
-        <Tab value="sauce" active={nearestTab === "sauce"} onClick={() => {}}>
-          Соусы
-        </Tab>
-        <Tab value="main" active={nearestTab === "main"} onClick={() => {}}>
-          Начинки
-        </Tab>
-      </div>
-      <div
-        ref={scrollContainerRef}
-        onScroll={handleScroll}
-        className={styles.ingredientsWrapper}
-      >
-        <h3
-          ref={bunsHeaderRef}
-          className={`${styles.subtitle} text text_type_main-medium`}
-        >
-          Булки
-        </h3>
-        <ul className={styles.ingredientsBlock}>
-          {ingredients
-            .filter((ingredient) => ingredient.type === "bun")
-            .map((bunItem) => (
-              <IngredientCard
-                key={bunItem._id}
-                data={bunItem}
-                onClick={onIngredientCardClick}
-              />
-            ))}
-        </ul>
-        <h3
-          ref={saucesHeaderRef}
-          className={`${styles.subtitle} text text_type_main-medium`}
-        >
-          Соусы
-        </h3>
-        <ul className={styles.ingredientsBlock}>
-          {ingredients
-            .filter((ingredient) => ingredient.type === "sauce")
-            .map((sauceItem) => (
-              <IngredientCard
-                key={sauceItem._id}
-                data={sauceItem}
-                onClick={onIngredientCardClick}
-              />
-            ))}
-        </ul>
-        <h3
-          ref={mainsHeaderRef}
-          className={`${styles.subtitle} text text_type_main-medium`}
-        >
-          Начинка
-        </h3>
-        <ul className={styles.ingredientsBlock}>
-          {ingredients
-            .filter((ingredient) => ingredient.type === "main")
-            .map((mainItem) => (
-              <IngredientCard
-                key={mainItem._id}
-                data={mainItem}
-                onClick={onIngredientCardClick}
-              />
-            ))}
-        </ul>
+    <section className={`${styles.burgerIngredients}`}>
+      <div className="tabs">
+        <div className="tabs__list">
+          <Tab value="bun" active={current === 'bun'} onClick={() => onClickTab('bun', bunTabClickRef)}>Булки</Tab>
+          <Tab value="sauce" active={current === 'sauce'} onClick={() => onClickTab('sauce', sauceTabClickRef)}>Соусы</Tab>
+          <Tab value="main" active={current === 'main'} onClick={() => onClickTab('main', mainTabClickRef)}>Начинки</Tab>
+          <span className="tabs__line"/>
+        </div>
+        <div className={`${styles.burgerIngredients__box} mt-10 scrollbar-vertical`} onChange={handleIngredientScroll} ref={ingredientsRef}>
+          <div className={`${styles.burgerIngredients__inner}`} ref={bunRef}>
+            <div ref={bunTabClickRef}>
+              <BurgerIngredientsCategory categoryHeader="Булки">
+                {dataBun.map(item => <BurgerIngredient key={item._id} item={item} openDataModal={openDataModal} />)}
+              </BurgerIngredientsCategory>
+            </div>
+          </div>
+          <div className={`${styles.burgerIngredients__inner}`} ref={sauceRef}>
+            <div ref={sauceTabClickRef}>
+              <BurgerIngredientsCategory categoryHeader="Соусы">
+                {dataSauce.map(item => <BurgerIngredient key={item._id} item={item} openDataModal={openDataModal} />)}
+              </BurgerIngredientsCategory>
+            </div>
+          </div>
+          <div className={`${styles.burgerIngredients__inner}`} ref={mainRef}>
+            <div ref={mainTabClickRef}>
+              <BurgerIngredientsCategory categoryHeader="Начинки">
+                {dataMain.map(item => <BurgerIngredient key={item._id} item={item} openDataModal={openDataModal} />)}
+              </BurgerIngredientsCategory>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
 export default BurgerIngredients;

@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  padding-top: 100px;
+  position: relative;
+}
+
+.left {
+  width: 320px;
+  text-align: left;
+}
+
+.left [class*=menu__link] {
+  padding: 17px 0;
+  font-size: 24px;
+  line-height: 1.25;
+}

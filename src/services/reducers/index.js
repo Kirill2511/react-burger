@@ -1,15 +1,19 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
-import constructorReducer from './constructorReducer';
-import ingredientsReducer from './ingredientsReducer';
-import modalReducer from './modalReducer';
-import orderReducer from './orderReducer';
+import { dataReducer } from "./dataReducer";
+import { modalDataReducer } from "./modalDataReducer";
+import { modalIngredientsReducer } from "./modalIngredientsReducer";
+import { modalOrderReducer } from "./modalOrderReducer";
+import { orderReducer } from "./orderReducer";
+import { userReducer } from "./userReducer";
 
 const rootReducer = combineReducers({
-	ingredients: ingredientsReducer,
-	burger: constructorReducer,
-	order: orderReducer,
-	modal: modalReducer,
+  data: dataReducer,
+  user: userReducer,
+  order: orderReducer,
+  modalData: modalDataReducer,
+  modalOrder: modalOrderReducer,
+  modalIngredients: modalIngredientsReducer,
 });
 
-export default rootReducer
+export default rootReducer;

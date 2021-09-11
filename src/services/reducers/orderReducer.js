@@ -1,37 +1,45 @@
 import {
-	CLEAR_ORDER_ERROR,
-    MAKE_ORDER,
-	ORDER_ERROR,
-} from '../actions/orderActions';
+  GET_ORDER_FAILED,
+  GET_ORDER_REQUEST,
+  GET_ORDER_SUCCESS,
+  SET_ORDER_ITEMS,
+} from "../actions/orderActions";
 
-const initialState = {
-    orderDetails: {},
-	orderError: '',
+export const initialState = {
+  orderId: null,
+  itemsId: [],
+  isLoading: false,
 };
 
-const orderReducer = (state = initialState, action) => {
-	switch (action.type) {
-		case MAKE_ORDER:
-			return {
-				...state,
-				orderDetails: action.payload,
-			};
+export const orderReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case GET_ORDER_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      };
 
-		case ORDER_ERROR:
-			return {
-				...state,
-				orderError: action.payload,
-			};
+    case GET_ORDER_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        orderId: action.orderId,
+      };
 
-		case CLEAR_ORDER_ERROR:
-			return {
-				...state,
-				orderError: '',
-			}
+    case GET_ORDER_FAILED:
+      return {
+        ...state,
+        orderId: null,
+        isLoading: false,
+      };
 
-		default:
-			return state;
-	}
+    case SET_ORDER_ITEMS:
+      return {
+        ...state,
+        itemsId: action.itemsId,
+      };
+
+    default:
+      return state;
+  }
 };
-
-export default orderReducer;

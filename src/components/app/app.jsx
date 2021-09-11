@@ -1,62 +1,130 @@
-import React, { useEffect } from "react";
+// eslint-disable-next-line simple-import-sort/imports
+import { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 
-import { addIngredient } from "../../services/actions/constructorActions";
-import { getIngredients } from "../../services/actions/ingredientsActions";
-import { closeModal } from "../../services/actions/modalActions";
+import {
+  Page404,
+  PageForgotPassword,
+  PageLogin,
+  PageProfile,
+  PageProfileForm,
+  PageRegister,
+  PageResetPassword,
+} from "../../pages";
+
+import { getData } from "../../services/actions/dataActions";
+import { closeDataModal } from "../../services/actions/modalDataActions";
+import { getUserInfo } from "../../services/actions/userActions";
+import { getCookie } from "../../services/helpers";
+
 import AppHeader from "../app-header/app-header";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import IngredientDetails from "../ingredients-details/ingredients-details";
+import Error from "../error/error";
+import IngredientDetails from "../ingredient-details/ingredient-details";
+import Loader from "../loader/loader";
+import Main from "../main/main";
+import Title from "../title/title";
 import Modal from "../modal/modal";
-import OrderDetails from "../order-details/order-details";
+
+import ProtectedRouteAuth from "../protected-route-auth/protected-route-auth";
+import ProtectedRoutePasswordReset from "../protected-route-password-reset/protected-route-password-reset";
+import ProtectedRouteProfile from "../protected-route-profile/protected-route-profile";
+
 import styles from "./app.module.css";
 
-const ingredient = state => state.ingredients;
-const modal = (state) => state.modal;
+const data = (state) => state.data;
 
 const App = () => {
   const dispatch = useDispatch();
-  const { ingredients } = useSelector(ingredient);
-  const { modalIsOpen, modalMode } = useSelector(modal);
+  const location = useLocation();
+  const history = useHistory();
+  const accessToken = getCookie("accessToken");
+  const { hasError, isLoading } = useSelector(data);
+  const background = history.action === "PUSH" && location.state && location.state.background;
 
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
-
-  const handleDrop = (itemId) => {
-    dispatch(
-      addIngredient(
-        ingredients.find((ingredient) => ingredient._id === itemId.id)
-      )
-    );
+  const onCloseDataModal = () => {
+    dispatch(closeDataModal());
+    history.goBack();
   };
 
+  useEffect(() => {
+    dispatch(getData());
+    // eslint-disable-next-line babel/no-unused-expressions
+    accessToken && dispatch(getUserInfo());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   return (
-    <>
+    <div className={styles.app}>
       <AppHeader />
-      <main className={styles.main}>
-        <DndProvider backend={HTML5Backend}>
-          <BurgerIngredients />
-          <BurgerConstructor onDropHandler={handleDrop} />
-        </DndProvider>
-      </main>
-      {modalIsOpen && modalMode === "ingredient-details" ? (
-        <Modal
-          title="Детали ингредиента"
-          onClose={() => dispatch(closeModal())}
-        >
-          <IngredientDetails />
-        </Modal>
-      ) : null}
-      {modalIsOpen && modalMode === "order-details" ? (
-        <Modal onClose={() => dispatch(closeModal())}>
-          <OrderDetails />
-        </Modal>
-      ) : null}
-    </>
+      <Main>
+        <Switch location={background || location}>
+          <Route path="/" exact>
+            {isLoading ? (
+              <Loader />
+            ) : hasError ? (
+              <Error />
+            ) : (
+              <DndProvider backend={HTML5Backend}>
+                <div className="content">
+                  <Title text="Соберите бургер" />
+                  <div className="content__body">
+                    <BurgerIngredients />
+                    <BurgerConstructor />
+                  </div>
+                </div>
+              </DndProvider>
+            )}
+          </Route>
+          <ProtectedRouteAuth path="/register" exact>
+            <PageRegister />
+          </ProtectedRouteAuth>
+          <ProtectedRouteAuth path="/login" exact>
+            <PageLogin />
+          </ProtectedRouteAuth>
+          <ProtectedRouteAuth path="/forgot-password" exact>
+            <PageForgotPassword />
+          </ProtectedRouteAuth>
+          <ProtectedRoutePasswordReset path="/reset-password" exact>
+            <PageResetPassword />
+          </ProtectedRoutePasswordReset>
+          <ProtectedRouteProfile path="/profile" exact>
+            <PageProfile>
+              <PageProfileForm />
+            </PageProfile>
+          </ProtectedRouteProfile>
+          <ProtectedRouteProfile path="/profile/orders" exact>
+            <PageProfile />
+          </ProtectedRouteProfile>
+          <ProtectedRouteProfile path="/profile/orders/:id" exact />
+          <Route path="/ingredients/:id" exact>
+            <IngredientDetails />
+          </Route>
+          <Route path="/order" exact />
+          <Route>
+            <Page404 />
+          </Route>
+        </Switch>
+        {background && (
+          <>
+            <Route
+              path="/ingredients/:id"
+              exact
+              /* eslint-disable-next-line react/no-children-prop */
+              children={
+                <Modal modalHeader="Детали ингредиента" handleClose={onCloseDataModal}>
+                  {isLoading ? <Loader /> : hasError ? <Error /> : <IngredientDetails />}
+                </Modal>
+              }
+            />
+          </>
+        )}
+      </Main>
+    </div>
   );
 };
 

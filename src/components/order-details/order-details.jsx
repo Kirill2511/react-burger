@@ -1,40 +1,32 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
+import CountUp from "react-countup";
 
-import doneIcon from "../../images/doneIcon.svg";
+import iconDone from "../../images/doneIcon.svg";
 import styles from "./order-details.module.css";
 
-const order = (state) => state.order;
-
-const OrderDetails = () => {
-  const { orderDetails, orderError } = useSelector(order);
-
-  if (orderError) {
-    return <span className="text text_type_main-medium">{orderError}</span>;
-  }
+const OrderDetails = ({ orderId }) => {
+  const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
   return (
-    <>
-      <span className={`text text_type_digits-large ${styles.orderId}`}>
-        {orderDetails.success ? orderDetails.order.number : null}
-      </span>
-      <span className="text text_type_main-medium">идентификатор заказа</span>
-      <div className={styles.doneIcon}>
-        <img src={doneIcon} alt="done-icon" />
+    <div className={styles.orderDetails}>
+      <div className={`${styles.orderDetails__id} text text_type_digits-large`}>
+        <CountUp end={orderId !== null ? Number(orderId) : randomIntFromInterval(100_000, 999_999)} />
       </div>
-      <div className={styles.description}>
-        <span className="text text_type_main-default">
-          Ваш заказ начали готовить
-        </span>
-        <span
-          style={{ color: "#8585AD" }}
-          className="text text_type_main-default"
-        >
-          Дождитесь готовности на орбитальной станции
-        </span>
-      </div>
-    </>
+      <h2 className={`${styles.orderDetails__title} text text_type_main-medium`}>идентификатор заказа</h2>
+      <picture className={`${styles.orderDetails__status}`}>
+        <img className={`${styles.orderDetails__img}`} src={iconDone} alt="" />
+      </picture>
+      <p className={`${styles.orderDetails__start} text`}>Ваш заказ начали готовить</p>
+      <p className={`${styles.orderDetails__wait} text text_type_main-default`}>
+        Дождитесь готовности на орбитальной станции
+      </p>
+    </div>
   );
 };
 
 export default OrderDetails;
+
+OrderDetails.propTypes = {
+  // eslint-disable-next-line react-redux/no-unused-prop-types,react/require-default-props,react/no-unused-prop-types
+  order: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+};

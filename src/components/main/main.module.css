@@ -1,0 +1,25 @@
+.main {
+  position: relative;
+}
+
+.main__container {
+  max-width: 1280px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+@media (max-width: 767px) {
+  .main__container {
+    padding-top: 16px !important;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 80px;
+  }
+}
+
+@media (max-width: 576px) {
+  .main__container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

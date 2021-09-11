@@ -1,0 +1,29 @@
+.right {
+  width: 480px;
+  margin-left: 60px;
+}
+
+.form [class*=input__container] {
+  margin-bottom: 24px;
+}
+
+.form [class*=input__container],
+.form [class*=input_size_default] {
+  width: 100% !important;
+}
+
+.formFoot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  max-width: 320px;
+  color: #8585AD;
+  opacity: .4;
+  text-align: left;
+}

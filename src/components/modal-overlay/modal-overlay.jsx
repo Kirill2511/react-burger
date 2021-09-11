@@ -1,46 +1,25 @@
 import PropTypes from "prop-types";
-import React, { useCallback, useEffect, useRef } from "react";
 
 import styles from "./modal-overlay.module.css";
 
-const ModalOverlay = (props) => {
-  const { onClose } = props;
-  const modalOverlayRef = useRef(document.createElement("div"));
-
-  const onEscapeClose = useCallback(
-    (event) => {
-      const escapeKeyCode = 27;
-      if (event.keyCode === escapeKeyCode) {
-        onClose();
-      }
-    },
-    [onClose]
-  );
-
-  const onOverlayClose = React.useCallback(
-    ({ target }) => {
-      if (modalOverlayRef.current === target) {
-        onClose();
-      }
-    },
-    [onClose]
-  );
-
-  useEffect(() => {
-    document.addEventListener("keydown", onEscapeClose);
-    document.addEventListener("click", onOverlayClose);
-
-    return () => {
-      document.removeEventListener("keydown", onEscapeClose);
-      document.removeEventListener("click", onOverlayClose);
-    };
-  });
-
-  return <div ref={modalOverlayRef} className={styles.overlay} />;
-};
-
-ModalOverlay.propTypes = {
-  onClose: PropTypes.func.isRequired,
-};
+const ModalOverlay = ({ handleOverlayClose, handleOverlayEnterClose }) => (
+  <div
+    aria-checked="false"
+    aria-labelledby="foo"
+    role="switch"
+    className={styles.modalOverlay}
+    onClick={handleOverlayClose}
+    onKeyDown={handleOverlayEnterClose}
+    onKeyPress={handleOverlayEnterClose}
+    tabIndex="0"
+  />
+);
 
 export default ModalOverlay;
+
+ModalOverlay.propTypes = {
+  // eslint-disable-next-line react/require-default-props
+  handleOverlayClose: PropTypes.func,
+  // eslint-disable-next-line react/require-default-props
+  handleOverlayEnterClose: PropTypes.func,
+};

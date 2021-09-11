@@ -1,31 +1,59 @@
-import {BurgerIcon, ListIcon, Logo, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components'
-import React from 'react';
+import {
+  ArrowDownIcon,
+  BurgerIcon,
+  Button,
+  ListIcon,
+  ProfileIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
+import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 
-import styles from './app-header.module.css'
+import Dropdown from "../dropdown/dropdown";
+import Logo from "../logo/logo";
+import styles from "./app-header.module.css";
 
-const AppHeader = () => (
+const users = (state) => state.user;
+
+const AppHeader = () => {
+  const { isLoggined } = useSelector(users);
+
+  return (
     <header className={styles.header}>
-        <nav className={`${styles.headerContent} pt-4 pb-4`}>
-            <div style={{display: 'flex'}}>
-                <div style={{display: 'flex'}} className="mr-2 pl-5 pt-4 pr-5 pb-4">
-                    <BurgerIcon type="primary"/>
-                    <p className="text text_type_main-default ml-2">Конструктор</p>
-                </div>
-                <div style={{display: 'flex'}} className="pl-5 pt-4 pr-5 pb-4">
-                    <ListIcon type="secondary"/>
-                    <p className="text text_type_main-default ml-2">Лента заказов</p>
-                </div>
-            </div>
-            <div className={`${styles.logoItem} ml-30`}>
-                <Logo/>
-            </div>
-            <div style={{display: 'flex'}} className="pl-5 pt-4 pr-5 pb-4">
-                <ProfileIcon type="secondary"/>
-                <p className="text text_type_main-default text_color_inactive ml-2">
-                    Личный кабинет
-                </p>
-            </div>
-        </nav>
+      <div className={`${styles.header__container} pt-4 pb-4 pl-5 pr-5`}>
+        <div className={styles.header__logo}>
+          <Logo />
+        </div>
+        <div className={styles.header__body}>
+          <NavLink exact className="nav-link" activeClassName="nav-link--active" to="/">
+            <BurgerIcon type="secondary" />
+            <span className="ml-2">
+              Конструктор
+            </span>
+          </NavLink>
+          <NavLink exact className="nav-link" activeClassName="nav-link--active" to="/order">
+            <ListIcon type="secondary" />
+            <span className="ml-2">Лента заказов</span>
+          </NavLink>
+          {!isLoggined ? (
+            <NavLink exact className={`${styles.header__btn} ${styles.header__btnProfile} nav-link`} to="/login">
+              <ListIcon type="secondary" />
+              <span className="ml-2">Войти</span>
+            </NavLink>
+          ) : (
+            <Dropdown newClasses={`${styles.header__btn} ${styles.header__btnProfile}`}>
+              <Button type="secondary" size="medium">
+                <ProfileIcon type="secondary" />
+                <span className="ml-2">
+                  <span>Личный кабинет</span>
+                </span>
+                <ArrowDownIcon type="secondary" />
+              </Button>
+            </Dropdown>
+          )}
+        </div>
+      </div>
     </header>
-    )
+  );
+};
+
 export default AppHeader;
