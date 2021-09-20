@@ -1,90 +1,109 @@
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useMemo,useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useSelector } from "react-redux";
 
-import { openDataModal } from "../../services/actions/modalDataActions";
-import BurgerIngredient from "../burger-ingredient/burger-ingredient";
-import BurgerIngredientsCategory from "../burger-ingredients-category/burger-ingredients-category";
+import BurgerIngredient from "./burger-ingredient/burger-ingredient";
 import styles from "./burger-ingredients.module.css";
 
-const ingredient = (state) => state.data;
+const BurgerIngredients = ({ openModal }) => {
+  const [currentTab, setCurrentTab] = useState("buns");
+  // eslint-disable-next-line react-redux/useSelector-prefer-selectors
+  const { cart, ingredients } = useSelector(state => ({ cart: state.cart, ingredients: state.ingredients }));
+  const prodData = [...ingredients.data];
 
-const BurgerIngredients = () => {
-  const { data } = useSelector(ingredient);
-  const [current, setCurrent] = useState("bun");
-  const ingredientsRef = useRef(null);
-  const bunTabClickRef = useRef(null);
-  const sauceTabClickRef = useRef(null);
-  const mainTabClickRef = useRef(null);
-  const [bunRef, inViewBuns] = useInView({ threshold: 0.1 });
-  const [sauceRef, inViewSauces] = useInView({ threshold: 0.1 });
-  const [mainRef, inViewMains] = useInView({ threshold: 0.1 });
-
-  const handleIngredientScroll = () => {
-    if (inViewBuns) {
-      setCurrent("bun");
-    } else if (inViewSauces) {
-      setCurrent("sauce");
-    } else if (inViewMains) {
-      setCurrent("main");
-    }
-  };
-
+  const [bunsRef, inViewBuns] = useInView({ threshold: 0 });
+  const [mainsRef, inViewFilling] = useInView({ threshold: 0 });
+  const [saucesRef, inViewSauces] = useInView({ threshold: 0 });
   useEffect(() => {
-    handleIngredientScroll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inViewBuns, inViewMains, inViewSauces]);
+    if (inViewBuns) {
+      setCurrentTab("buns");
+    } else if (inViewSauces) {
+      setCurrentTab("sauces");
+    } else if (inViewFilling) {
+      setCurrentTab("mains");
+    }
+  }, [inViewBuns, inViewFilling, inViewSauces]);
 
-  const onClickTab = (type, ref) => {
-    setCurrent(type);
-    // eslint-disable-next-line babel/no-unused-expressions
-    ref.current &&
-      ref.current.scrollIntoView({
-        block: "start",
-        behavior: "smooth",
-      });
+  const setTab = (tab) => {
+    setCurrentTab(tab);
+    // eslint-disable-next-line unicorn/prefer-query-selector
+    const element = document.getElementById(tab);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
   };
-
-  const dataBun = useMemo(() => data && data.filter((item) => item.type === "bun"), [data]);
-  const dataSauce = useMemo(() => data && data.filter((item) => item.type === "sauce"), [data]);
-  const dataMain = useMemo(() => data && data.filter((item) => item.type === "main"), [data]);
+  const buhData = prodData && Array.isArray(prodData) && prodData.filter((item) => item.type === "bun");
+  const sauceData = prodData && Array.isArray(prodData) && prodData.filter((item) => item.type === "sauce");
+  const mainData = prodData && Array.isArray(prodData) && prodData.filter((item) => item.type === "main");
+  const countItem = (itemId) =>
+    cart.sortedData && cart.sortedData.fillers?.filter((item) => item._id === itemId).length;
+  const countItemBun = (itemId) => cart.sortedData && cart.sortedData.bun?._id === itemId;
 
   return (
-    <section className={`${styles.burgerIngredients}`}>
-      <div className="tabs">
-        <div className="tabs__list">
-          <Tab value="bun" active={current === 'bun'} onClick={() => onClickTab('bun', bunTabClickRef)}>Булки</Tab>
-          <Tab value="sauce" active={current === 'sauce'} onClick={() => onClickTab('sauce', sauceTabClickRef)}>Соусы</Tab>
-          <Tab value="main" active={current === 'main'} onClick={() => onClickTab('main', mainTabClickRef)}>Начинки</Tab>
-          <span className="tabs__line"/>
-        </div>
-        <div className={`${styles.burgerIngredients__box} mt-10 scrollbar-vertical`} onChange={handleIngredientScroll} ref={ingredientsRef}>
-          <div className={`${styles.burgerIngredients__inner}`} ref={bunRef}>
-            <div ref={bunTabClickRef}>
-              <BurgerIngredientsCategory categoryHeader="Булки">
-                {dataBun.map(item => <BurgerIngredient key={item._id} item={item} openDataModal={openDataModal} />)}
-              </BurgerIngredientsCategory>
-            </div>
-          </div>
-          <div className={`${styles.burgerIngredients__inner}`} ref={sauceRef}>
-            <div ref={sauceTabClickRef}>
-              <BurgerIngredientsCategory categoryHeader="Соусы">
-                {dataSauce.map(item => <BurgerIngredient key={item._id} item={item} openDataModal={openDataModal} />)}
-              </BurgerIngredientsCategory>
-            </div>
-          </div>
-          <div className={`${styles.burgerIngredients__inner}`} ref={mainRef}>
-            <div ref={mainTabClickRef}>
-              <BurgerIngredientsCategory categoryHeader="Начинки">
-                {dataMain.map(item => <BurgerIngredient key={item._id} item={item} openDataModal={openDataModal} />)}
-              </BurgerIngredientsCategory>
-            </div>
-          </div>
+    <section className={`${styles.container}`}>
+      <div className={styles.header_tabs}>
+        <h2 className="text text_type_main-large mt-10 mb-5 ">Соберите бургер</h2>
+        <div className={`${styles.tabs}`}>
+          <Tab value="buns" active={currentTab === "buns"} onClick={setTab}>
+            Булки
+          </Tab>
+          <Tab value="sauces" active={currentTab === "sauces"} onClick={setTab}>
+            Соусы
+          </Tab>
+          <Tab value="mains" active={currentTab === "mains"} onClick={setTab}>
+            Начинки
+          </Tab>
         </div>
       </div>
+      <div className={`${styles.scroll_list} pr-4`}>
+        <section className={styles.sec_items} id="buns" ref={bunsRef}>
+          <h2 className={`text text_type_main-medium ${styles.sec_title}`}>Булки</h2>
+          <ul className={`${styles.items_list}`}>
+            {buhData &&
+              Array.isArray(buhData) &&
+              buhData.map((item) => (
+                <BurgerIngredient
+                  key={item._id}
+                  itemData={item}
+                  onItemClick={openModal}
+                  itemCounter={countItemBun(item._id) ? 1 : 0}
+                />
+              ))}
+          </ul>
+        </section>
+        <section className={styles.sec_items} id="sauces" ref={saucesRef}>
+          <h2 className={`text text_type_main-medium ${styles.sec_title}`}>Соусы</h2>
+          <ul className={`${styles.items_list}`}>
+            {sauceData &&
+              Array.isArray(sauceData) &&
+              sauceData.map((item) => (
+                <BurgerIngredient
+                  key={item._id}
+                  itemData={item}
+                  onItemClick={openModal}
+                  itemCounter={countItem(item._id)}
+                />
+              ))}
+          </ul>
+        </section>
+        <section className={styles.sec_items} id="mains" ref={mainsRef}>
+          <h2 className={`text text_type_main-medium ${styles.sec_title}`}>Начинки</h2>
+          <ul className={`${styles.items_list}`}>
+            {mainData &&
+              Array.isArray(mainData) &&
+              // eslint-disable-next-line sonarjs/no-identical-functions
+              mainData.map((item) => (
+                <BurgerIngredient
+                  key={item._id}
+                  itemData={item}
+                  onItemClick={openModal}
+                  itemCounter={countItem(item._id)}
+                />
+              ))}
+          </ul>
+        </section>
+      </div>
     </section>
-  )
-}
+  );
+};
 
 export default BurgerIngredients;

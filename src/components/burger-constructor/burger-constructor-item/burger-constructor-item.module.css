@@ -1,0 +1,21 @@
+.item {
+  display: flex;
+
+  align-items: center;
+}
+
+.item_elem {
+  flex-grow: 1;
+}
+
+.drag_icon {
+  padding-right: 8px;
+}
+
+:global(.constructor-element) {
+  flex-grow: 1;
+}
+
+:global(.constructor-element__text) {
+  flex-grow: 1;
+}

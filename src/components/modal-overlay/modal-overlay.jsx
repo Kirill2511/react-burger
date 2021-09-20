@@ -2,24 +2,14 @@ import PropTypes from "prop-types";
 
 import styles from "./modal-overlay.module.css";
 
-const ModalOverlay = ({ handleOverlayClose, handleOverlayEnterClose }) => (
-  <div
-    aria-checked="false"
-    aria-labelledby="foo"
-    role="switch"
-    className={styles.modalOverlay}
-    onClick={handleOverlayClose}
-    onKeyDown={handleOverlayEnterClose}
-    onKeyPress={handleOverlayEnterClose}
-    tabIndex="0"
-  />
-);
-
-export default ModalOverlay;
+function ModalOverlay({ closeModal }) {
+  return (
+    <div aria-hidden="true" role="presentation" className={styles.modal_overlay} onClick={closeModal} />
+  );
+}
 
 ModalOverlay.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  handleOverlayClose: PropTypes.func,
-  // eslint-disable-next-line react/require-default-props
-  handleOverlayEnterClose: PropTypes.func,
+  closeModal: PropTypes.func.isRequired,
 };
+
+export default ModalOverlay;

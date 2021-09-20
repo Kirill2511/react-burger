@@ -1,0 +1,24 @@
+.orders_list {
+  width: 100%;
+  margin-left: 60px;
+  overflow-y: scroll;
+  height: calc(100vh - 268px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scrollbar-width: thin;
+  padding-right: 5px;
+}
+
+.orders_list::-webkit-scrollbar {
+  width: 8px;
+}
+.orders_list::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+.orders_list::-webkit-scrollbar-thumb {
+  background: #8585ad;
+}
+
+
+

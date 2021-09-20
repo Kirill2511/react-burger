@@ -1,16 +1,16 @@
-.container {
+.profile {
   display: flex;
-  padding-top: 100px;
-  position: relative;
+  width: 100%;
+  max-width: 1240px;
+  margin: calc(120px + 88px) auto 0;
 }
 
-.left {
-  width: 320px;
-  text-align: left;
+.nav_container {
+  width: 100%;
+  max-width: 320px;
 }
 
-.left [class*=menu__link] {
-  padding: 17px 0;
-  font-size: 24px;
-  line-height: 1.25;
+.nav__text {
+  margin: 80px 0 0;
+  opacity: 0.4;
 }
