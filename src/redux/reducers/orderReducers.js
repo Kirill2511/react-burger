@@ -1,6 +1,6 @@
 import { GET_ORDER_REQUEST, GET_ORDER_SUCCESS, GET_ORDER_FAILED, SET_ORDER_ERROR } from "../action-types";
 
-const initialState = {
+export const initialState = {
   data: [],
   numberOrd: 0,
   isFetching: false,
@@ -22,7 +22,7 @@ export const orderReducer = (state = initialState, action) => {
         ...state,
         fetchingFailed: false,
         data: action.payload,
-        numberOrd: action.payload.order.number,
+        numberOrd: action.payload.number,
         isFetching: false,
       };
     }

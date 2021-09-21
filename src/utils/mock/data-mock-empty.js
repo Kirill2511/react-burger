@@ -1,9 +1,10 @@
 import iconBerger from "../../images/icon-burger.svg";
 
+// TODO mosk data
 const dataEmpty = [
   {
     _id: "60666c42cc7b410027a1a9b2",
-    name: "Собери свой бургер",
+    name: "Собери здесь свой бургер",
     type: "empty",
     proteins: 0,
     fat: 0,
@@ -17,4 +18,5 @@ const dataEmpty = [
   },
 ];
 
+// TODO Экспорт данных для использования в компонентах
 export default dataEmpty;

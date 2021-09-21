@@ -5,7 +5,7 @@ const headers = {
   get: {},
 };
 
-export const getIngredientsRequest = async () => await fetch(`${API_URL}/ingredients`);
+export const apiGetIngredientsRequest = async () => await fetch(`${API_URL}/ingredients`);
 
 export const checkoutRequest = async (idOrderIngredients, token) =>
   await fetch(`${API_URL}/orders`, {
@@ -49,7 +49,7 @@ export const patchProfileRequest = async (data, token) =>
     body: JSON.stringify({ ...data }),
   });
 
-export const getProfileRequest = async (token) =>
+export const apiGetProfileRequest = async (token) =>
   await fetch(`${API_URL}/auth/user`, {
     method: "GET",
     headers: { ...headers.get, authorization: `Bearer ${token}` },

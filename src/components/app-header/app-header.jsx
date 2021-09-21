@@ -1,7 +1,7 @@
 import {Logo} from "@ya.praktikum/react-developer-burger-ui-components";
 import { NavLink } from "react-router-dom";
 
-import dataMenu from "../../utils/mock/data-menu";
+import dataMenu from "../../utils/data/data-menu";
 import styles from "./app-header.module.css";
 import MenuItem from "./menu-item/menu-item";
 

@@ -6,7 +6,7 @@ import {
   SWAP_CONSTRUCTOR_INGREDIENT,
 } from "../action-types";
 
-const initialState = {
+export const initialState = {
   data: [],
   sortedData: {
     bun: {},
@@ -15,6 +15,7 @@ const initialState = {
   },
 
   total: 0,
+  lastUpdated: null
 };
 
 export const constructorReducer = (state = initialState, action) => {
@@ -49,7 +50,6 @@ export const constructorReducer = (state = initialState, action) => {
       return {
         ...state,
         sortedData,
-        lastUpdated: Date.now(),
       };
     }
 
@@ -60,7 +60,7 @@ export const constructorReducer = (state = initialState, action) => {
       };
     }
     case RESET_CONSTRUCTOR: {
-      return { ...state, initialState };
+      return initialState ;
     }
 
     default: {

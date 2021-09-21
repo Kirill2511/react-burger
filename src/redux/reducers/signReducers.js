@@ -14,7 +14,7 @@ import {
   SET_PROFILE_CLEAR,
 } from "../action-types";
 
-const initialState = {
+export const initialState = {
   user: {
     name: null,
     email: null,
