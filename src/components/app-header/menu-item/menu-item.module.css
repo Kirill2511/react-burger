@@ -1,0 +1,13 @@
+.menu_link {
+  display: flex;
+  text-decoration: none;
+  color: #8585ad;
+}
+
+.menu_link:hover {
+  color: #f2f2f3;
+}
+
+.menu_link_active {
+  color: #f2f2f3;
+}

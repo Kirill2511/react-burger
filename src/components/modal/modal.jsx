@@ -1,53 +1,45 @@
+import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import ReactDOM from "react-dom";
-import { useHistory } from "react-router-dom";
 
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import styles from "./modal.module.css";
 
-const modalPortal = document.querySelector("#modal-root");
-
-const Modal = ({ modalHeader = null, handleClose, children }) => {
-  const history = useHistory();
-
+function Modal({ children, closeModal, modalTitle }) {
+  const closeModalByEscKey = (e) => {
+    if (e.key === "Escape") closeModal();
+    e.stopImmediatePropagation();
+  };
   useEffect(() => {
-    const closeCallbackModalEscape = (e) => {
-      if (e.key === "Escape" || e.code === "NumpadEnter") {
-        e.preventDefault();
-        handleClose();
-        history.goBack();
-      }
-    };
-
-    document.addEventListener("keydown", closeCallbackModalEscape);
-
+    document.addEventListener("keydown", closeModalByEscKey);
     return () => {
-      document.removeEventListener("keydown", closeCallbackModalEscape);
+      document.removeEventListener("keydown", closeModalByEscKey);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleClose]);
+  }, []);
+
+  const modalRoot = document.querySelector("#app-modals");
 
   return ReactDOM.createPortal(
-    <div className={styles.modal}>
-      <ModalOverlay handleOverlayClose={handleClose} handleOverlayEnterClose={handleClose} />
-      <div className={`${styles.modal__content} scrollbar-vertical`}>
-        <button aria-label="Close" type="button" className={styles.modal__close} onClick={handleClose} title="Close" />
-        {modalHeader && <h2 className={`${styles.modal__title} text text_type_main-large`}>{modalHeader}</h2>}
+    <>
+      <ModalOverlay closeModal={closeModal} />
+      <section className={styles.modal}>
+        <div className={`${styles.header} pr-10 pt-10 pl-10`}>
+          <h2 className="text text_type_main-large ">{modalTitle}</h2>
+          <CloseIcon type="primary" onClick={closeModal} />
+        </div>
         {children}
-      </div>
-    </div>,
-    modalPortal
+      </section>
+    </>,
+    modalRoot
   );
+}
+
+Modal.propTypes = {
+  modalTitle: PropTypes.string,
+  closeModal: PropTypes.func.isRequired,
+  children: PropTypes.element,
 };
 
 export default Modal;
-
-Modal.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  modalHeader: PropTypes.string,
-  // eslint-disable-next-line react/require-default-props
-  handleClose: PropTypes.func,
-  // eslint-disable-next-line react/require-default-props
-  children: PropTypes.element,
-};

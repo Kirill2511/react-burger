@@ -1,32 +1,32 @@
-import PropTypes from "prop-types";
-import CountUp from "react-countup";
+import React from "react";
+import { useSelector } from "react-redux";
 
-import iconDone from "../../images/doneIcon.svg";
+import orderDone from "../../images/order-done.svg";
+import spinWhite from "../../images/spin-white.svg";
+import { getStateOrder } from "../../redux/selectors";
 import styles from "./order-details.module.css";
 
-const OrderDetails = ({ orderId }) => {
-  const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+function leftFillNum(num, targetLength) {
+  return num.toString().padStart(targetLength, 0);
+}
 
+const OrderDetails = () => {
+  const order = useSelector(getStateOrder);
   return (
-    <div className={styles.orderDetails}>
-      <div className={`${styles.orderDetails__id} text text_type_digits-large`}>
-        <CountUp end={orderId !== null ? Number(orderId) : randomIntFromInterval(100_000, 999_999)} />
-      </div>
-      <h2 className={`${styles.orderDetails__title} text text_type_main-medium`}>идентификатор заказа</h2>
-      <picture className={`${styles.orderDetails__status}`}>
-        <img className={`${styles.orderDetails__img}`} src={iconDone} alt="" />
-      </picture>
-      <p className={`${styles.orderDetails__start} text`}>Ваш заказ начали готовить</p>
-      <p className={`${styles.orderDetails__wait} text text_type_main-default`}>
+    <>
+      <h1 className="text text_type_digits-large mt-30">{leftFillNum(order.numberOrd, 7)}</h1>
+      <p className="text text_type_main-medium mt-8">идентификатор заказа</p>
+      <img
+        className={`mt-15 ${styles.icon_done}`}
+        src={order.isFetching ? spinWhite : orderDone}
+        alt="Заказ готовится"
+      />
+      <p className="text text_type_main-default mt-15">Ваш заказ начали готовить</p>
+      <p className="text text_type_main-default text_color_inactive mt-2 mb-30">
         Дождитесь готовности на орбитальной станции
       </p>
-    </div>
+    </>
   );
 };
 
 export default OrderDetails;
-
-OrderDetails.propTypes = {
-  // eslint-disable-next-line react-redux/no-unused-prop-types,react/require-default-props,react/no-unused-prop-types
-  order: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
-};

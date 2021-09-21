@@ -1,98 +1,37 @@
-.burgerConstructor,
-.burgerConstructor__head {
-  position: relative;
+.container {
+  width: calc(50% - 20px);
+  margin-left: 20px;
 }
 
-.burgerConstructor__foot .burgerConstructor__item {
-  margin-bottom: 0;
-}
-
-.burgerConstructor__head {
-  margin-bottom: 16px;
-}
-
-.burgerConstructor__head .burgerConstructor__drag,
-.burgerConstructor__foot .burgerConstructor__drag {
-  pointer-events: none;
-  opacity: 0;
-}
-
-.burgerConstructor__inner {
+.scroll_list {
   display: flex;
   flex-direction: column;
-  padding-left: 28px;
+  overflow-y: scroll;
+  max-height: 44vh;
+  list-style: none;
+  padding-left: 0;
+  scrollbar-width: thin;
 }
 
-.burgerConstructor__body {
-  min-height: 50px;
-  max-height: 480px;
-  padding-right: 8px;
+.scroll_list::-webkit-scrollbar {
+  width: 8px;
 }
 
-.burgerConstructor__bottom {
+.scroll_list::-webkit-scrollbar-track {
+  background: #1c1c21;
+}
+
+.scroll_list::-webkit-scrollbar-thumb {
+  background: #8585ad;
+}
+
+.item_list {
+  list-style: none;
+  padding: 0 16px 40px;
+}
+
+.checkout_container {
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-}
-
-.burgerConstructor__order:not(button) {
-  font-size: 0;
-}
-
-.burgerConstructor__order button {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
-
-.burgerConstructor__add {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 100px;
-  margin-top: 10px;
-  margin-bottom: 25px;
-  margin-left: 32px;
-  cursor: pointer;
-  transition: .3s ease;
-  color: #8585AD;
-  border: 2px dashed #8585AD;
-  border-radius: 25px;
-}
-
-.burgerConstructor__add:hover {
-  color: #fff;
-  border-color: #fff;
-}
-
-.burgerConstructor__previews {
-  width: 100%;
-  margin-top: 3em;
-}
-
-.burgerConstructor__preview {
-  font-family: 'Jet Brains Mono', serif;
-  font-size: 16px;
-  line-height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 536px;
-  min-height: 80px;
-  margin-bottom: 16px;
-  margin-left: 32px;
-  padding: 16px 24px;
-  color: #8585AD;
-  border: 1px dashed #8585AD;
-  border-radius: var(--common-border-radius-s);
-  background-color: #1C1C21;
-}
-
-.burgerConstructor__preview[data-position=top]{
-  border-radius: var(--top-constructor-item-border-radius);
-}
-
-.burgerConstructor__preview[data-position=bottom]{
-  border-radius: var(--bottom-constructor-item-border-radius);
 }
