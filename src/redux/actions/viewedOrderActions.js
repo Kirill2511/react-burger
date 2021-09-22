@@ -8,47 +8,42 @@ import {
 } from "../action-types";
 import { getOrderDetailsRequest } from "../../utils/api";
 
-function setViewOrder(orderData) {
-  return function (dispatch) {
-    dispatch({
-      type: SET_VIEW_ORDER,
-      payload: orderData,
-    });
-  };
-}
+export const setViewOrder = (data) => ({
+  type: SET_VIEW_ORDER,
+  payload: data,
+});
+export const resetViewOrder = () => ({
+  type: RESET_VIEW_ORDER,
+});
 
-function resetViewOrder() {
-  return function (dispatch) {
-    dispatch({
-      type: RESET_VIEW_ORDER,
-    });
-  };
-}
+export const getViewOrderRequest = () => ({
+  type: GET_VIEW_ORDER_REQUEST,
+});
+export const getViewOrderSuccess = (data) => ({
+  type: GET_VIEW_ORDER_SUCCESS,
+  payload: data,
+});
+export const getViewOrderFailed = () => ({
+  type: GET_VIEW_ORDER_FAILED,
+});
+export const setViewOrderError = (data) => ({
+  type: SET_VIEW_ORDER_ERROR,
+  payload: data,
+});
 
 function getOrderDetails(id) {
   return function (dispatch) {
-    dispatch({
-      type: GET_VIEW_ORDER_REQUEST,
-    });
+    dispatch(getViewOrderRequest());
     getOrderDetailsRequest(id)
       .then((response) => response.json())
       .then((result) => {
         if (!result.success) throw result;
-        dispatch({
-          type: GET_VIEW_ORDER_SUCCESS,
-          payload: result.orders[0],
-        });
+        dispatch(getViewOrderSuccess(result.orders[0]));
       })
-      .catch((e) => {
-        dispatch({
-          type: GET_VIEW_ORDER_FAILED,
-        });
-        dispatch({
-          type: SET_VIEW_ORDER_ERROR,
-          payload: e.message,
-        });
+      .catch(() => {
+        dispatch(getViewOrderFailed());
       });
   };
 }
 
-export { setViewOrder, resetViewOrder, getOrderDetails };
+export { getOrderDetails };

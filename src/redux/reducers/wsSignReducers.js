@@ -5,7 +5,7 @@ import {
   WS_SIGN_GET_MESSAGE,
 } from "../action-types";
 
-const initialState = {
+export const initialState = {
   wsConnected: false,
   data: {},
   error: null,

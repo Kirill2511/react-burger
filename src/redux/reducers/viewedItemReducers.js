@@ -1,6 +1,6 @@
 import { SET_VIEW_ITEM, RESET_VIEW_ITEM } from "../action-types";
 
-const initialState = {
+export const initialState = {
   data: {},
 };
 

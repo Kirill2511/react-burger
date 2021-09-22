@@ -1,6 +1,6 @@
 import { GET_INGREDIENTS_FAILED, GET_INGREDIENTS_REQUEST, GET_INGREDIENTS_SUCCESS } from "../action-types";
 
-const initialState = {
+export const initialState = {
   data: [],
   isFetching: false,
   fetchingFailed: false,
@@ -19,7 +19,7 @@ export const ingredientsReducer = (state = initialState, action) => {
       return {
         ...state,
         fetchingFailed: false,
-        data: action.items,
+        data: action.payload,
         isFetching: false,
       };
     }

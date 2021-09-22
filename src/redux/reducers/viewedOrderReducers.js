@@ -7,7 +7,7 @@ import {
   SET_VIEW_ORDER_ERROR,
 } from "../action-types";
 
-const initialState = {
+export const initialState = {
   data: {},
   isLoaded: false,
   isFetching: false,
