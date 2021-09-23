@@ -68,7 +68,7 @@ const BurgerIngredients: FC<IBurgerIngredients> = ({ openModal }) => {
                   key={item._id}
                   itemData={item}
                   onItemClick={openModal}
-                  itemCounter={countItemBun(item._id) ? 1 : 0}
+                  itemCounter={countItemBun(item._id) ? 2 : 0}
                 />
               ))}
           </ul>

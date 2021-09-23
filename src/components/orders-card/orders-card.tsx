@@ -30,7 +30,7 @@ const OrdersCard: FC<IOrdersCard> = ({ order }) => {
       (elem) => {
         const existingGroups = orderIngredientsWDetailsGroups.find(groupItem => groupItem._id === elem?._id);
         if (!existingGroups) {
-          const count = order?.ingredients.filter(id => id === elem._id).length || 0;
+          const count = order?.ingredients.filter(id => id === elem?._id).length || 1;
           orderIngredientsWDetailsGroups.push(
             {
               ...elem,
