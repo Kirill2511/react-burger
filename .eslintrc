@@ -1,7 +1,18 @@
 {
-  "extends": ["auto"],
+  "extends": [
+    "airbnb",
+    "airbnb-typescript",
+    "prettier"
+  ],
   "settings": {
     "babel": true
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
   },
   "rules": {
     "no-underscore-dangle": [
