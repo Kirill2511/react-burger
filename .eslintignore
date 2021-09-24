@@ -1,6 +1,6 @@
 
-/src/utils/utils.js
-/src/utils/api.js
-/src/utils/mock/data-mock-empty.js
+/src/utils/utils.ts
+/src/utils/api.ts
+/src/utils/token.ts
+/src/utils/mock/
 /src/redux/
-/src/utils/token.js

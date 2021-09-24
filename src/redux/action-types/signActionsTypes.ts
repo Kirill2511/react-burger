@@ -1,0 +1,13 @@
+export const GET_AUTH_REQUEST = "GET_AUTH_REQUEST" as const;
+export const GET_AUTH_SUCCESS = "GET_AUTH_SUCCESS" as const;
+export const GET_AUTH_FAILED = "GET_AUTH_FAILED" as const;
+export const SET_AUTH_ERROR = "SET_AUTH_ERROR" as const;
+export const GET_REGISTER_REQUEST = "GET_REGISTER_REQUEST" as const;
+export const GET_REGISTER_SUCCESS = "GET_REGISTER_SUCCESS" as const;
+export const GET_REGISTER_FAILED = "GET_REGISTER_FAILED" as const;
+export const SET_REGISTER_ERROR = "SET_REGISTER_ERROR" as const;
+export const GET_PROFILE_REQUEST = "GET_PROFILE_REQUEST" as const;
+export const GET_PROFILE_SUCCESS = "GET_PROFILE_SUCCESS" as const;
+export const GET_PROFILE_FAILED = "GET_PROFILE_FAILED" as const;
+export const SET_PROFILE_ERROR = "SET_PROFILE_ERROR" as const;
+export const SET_PROFILE_CLEAR = "SET_PROFILE_CLEAR" as const;
